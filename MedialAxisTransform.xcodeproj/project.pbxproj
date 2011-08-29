@@ -1,0 +1,237 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8B19F5C9140C535A001A1693 /* FileHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B19F5C3140C535A001A1693 /* FileHandler.cpp */; };
+		8B19F5CA140C535A001A1693 /* openCLUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B19F5C5140C535A001A1693 /* openCLUtilities.cpp */; };
+		8B19F5CB140C535A001A1693 /* RGBAUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B19F5C7140C535A001A1693 /* RGBAUtilities.cpp */; };
+		8B19F5CE140C53A3001A1693 /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B19F5CD140C53A3001A1693 /* libpng.framework */; };
+		8B19F5D0140C53AC001A1693 /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B19F5CF140C53AC001A1693 /* OpenCL.framework */; };
+		8BB5BC12140C526200FAF0AF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB5BC11140C526200FAF0AF /* main.cpp */; };
+		8BB5BC14140C526200FAF0AF /* MedialAxisTransform.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8BB5BC0B140C526200FAF0AF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8BB5BC14140C526200FAF0AF /* MedialAxisTransform.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8B19F5C3140C535A001A1693 /* FileHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileHandler.cpp; sourceTree = "<group>"; };
+		8B19F5C4140C535A001A1693 /* FileHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHandler.h; sourceTree = "<group>"; };
+		8B19F5C5140C535A001A1693 /* openCLUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = openCLUtilities.cpp; sourceTree = "<group>"; };
+		8B19F5C6140C535A001A1693 /* openCLUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = openCLUtilities.h; sourceTree = "<group>"; };
+		8B19F5C7140C535A001A1693 /* RGBAUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RGBAUtilities.cpp; sourceTree = "<group>"; };
+		8B19F5C8140C535A001A1693 /* RGBAUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGBAUtilities.h; sourceTree = "<group>"; };
+		8B19F5CD140C53A3001A1693 /* libpng.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng.framework; path = Library/Frameworks/libpng.framework; sourceTree = SDKROOT; };
+		8B19F5CF140C53AC001A1693 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		8B19F5D1140C5405001A1693 /* sobel_opt1.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = sobel_opt1.cl; sourceTree = "<group>"; };
+		8BB5BC0D140C526200FAF0AF /* MedialAxisTransform */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MedialAxisTransform; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BB5BC11140C526200FAF0AF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = MedialAxisTransform.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8BB5BC0A140C526200FAF0AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B19F5D0140C53AC001A1693 /* OpenCL.framework in Frameworks */,
+				8B19F5CE140C53A3001A1693 /* libpng.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8BB5BC02140C526200FAF0AF = {
+			isa = PBXGroup;
+			children = (
+				8B19F5CF140C53AC001A1693 /* OpenCL.framework */,
+				8B19F5CD140C53A3001A1693 /* libpng.framework */,
+				8BB5BC10140C526200FAF0AF /* MedialAxisTransform */,
+				8BB5BC0E140C526200FAF0AF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8BB5BC0E140C526200FAF0AF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8BB5BC0D140C526200FAF0AF /* MedialAxisTransform */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8BB5BC10140C526200FAF0AF /* MedialAxisTransform */ = {
+			isa = PBXGroup;
+			children = (
+				8BB5BC11140C526200FAF0AF /* main.cpp */,
+				8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */,
+				8B19F5C3140C535A001A1693 /* FileHandler.cpp */,
+				8B19F5C4140C535A001A1693 /* FileHandler.h */,
+				8B19F5C5140C535A001A1693 /* openCLUtilities.cpp */,
+				8B19F5D1140C5405001A1693 /* sobel_opt1.cl */,
+				8B19F5C6140C535A001A1693 /* openCLUtilities.h */,
+				8B19F5C7140C535A001A1693 /* RGBAUtilities.cpp */,
+				8B19F5C8140C535A001A1693 /* RGBAUtilities.h */,
+			);
+			path = MedialAxisTransform;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8BB5BC0C140C526200FAF0AF /* MedialAxisTransform */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BB5BC17140C526200FAF0AF /* Build configuration list for PBXNativeTarget "MedialAxisTransform" */;
+			buildPhases = (
+				8BB5BC09140C526200FAF0AF /* Sources */,
+				8BB5BC0A140C526200FAF0AF /* Frameworks */,
+				8BB5BC0B140C526200FAF0AF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MedialAxisTransform;
+			productName = MedialAxisTransform;
+			productReference = 8BB5BC0D140C526200FAF0AF /* MedialAxisTransform */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8BB5BC04140C526200FAF0AF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "University Of New England";
+			};
+			buildConfigurationList = 8BB5BC07140C526200FAF0AF /* Build configuration list for PBXProject "MedialAxisTransform" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 8BB5BC02140C526200FAF0AF;
+			productRefGroup = 8BB5BC0E140C526200FAF0AF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8BB5BC0C140C526200FAF0AF /* MedialAxisTransform */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8BB5BC09140C526200FAF0AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BB5BC12140C526200FAF0AF /* main.cpp in Sources */,
+				8B19F5C9140C535A001A1693 /* FileHandler.cpp in Sources */,
+				8B19F5CA140C535A001A1693 /* openCLUtilities.cpp in Sources */,
+				8B19F5CB140C535A001A1693 /* RGBAUtilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8BB5BC15140C526200FAF0AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		8BB5BC16140C526200FAF0AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		8BB5BC18140C526200FAF0AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8BB5BC19140C526200FAF0AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8BB5BC07140C526200FAF0AF /* Build configuration list for PBXProject "MedialAxisTransform" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BB5BC15140C526200FAF0AF /* Debug */,
+				8BB5BC16140C526200FAF0AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8BB5BC17140C526200FAF0AF /* Build configuration list for PBXNativeTarget "MedialAxisTransform" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BB5BC18140C526200FAF0AF /* Debug */,
+				8BB5BC19140C526200FAF0AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8BB5BC04140C526200FAF0AF /* Project object */;
+}
