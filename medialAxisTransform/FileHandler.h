@@ -23,4 +23,5 @@ bool areFilesLeft(void);
 int numberOfFiles(void);
 void printFiles(void);
 void sortFilesNumerically(std::string name, std::string ext);
+
 #endif

@@ -19,7 +19,7 @@ float4 getFillColour(){
  dir =  1 gives forward transform
  dir = -1 gives reverse transform 
  */
-void FFT(short int dir,long m, double *x,double *y)
+void FFT(short int dir,long m, float *x,float *y)
 {
     long n,i,i1,j,k,i2,l,l1,l2;
     double c1,c2,tx,ty,t1,t2,u1,u2,z;
@@ -72,10 +72,10 @@ void FFT(short int dir,long m, double *x,double *y)
             u2 = u1 * c2 + u2 * c1;
             u1 = z;
         }
-        c2 = native_sqrt((1.0 - c1) / 2.0);
+        c2 = sqrt((1.0 - c1) / 2.0);
         if (dir == 1) 
             c2 = -c2;
-        c1 = native_sqrt((1.0 + c1) / 2.0);
+        c1 = sqrt((1.0 + c1) / 2.0);
     }
     
     /* Scaling for forward transform */

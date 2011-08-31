@@ -1,6 +1,7 @@
 
 #include "openCLUtilities.h"
 #include "RGBAUtilities.h"
+#include "openGLVisualiser.h"
 
 #include <getopt.h>
 #include <string>
@@ -313,6 +314,8 @@ int main(int argc, char *argv[])
     
     //printImage(buffer, getImageSize()*depth);
         
+    plotMain(argc, argv, bigBuffer, getImageWidth(), getImageHeight(), depth);
+
     //load all images into a buffer
     for (int i = 0; i < depth; i++) {
         uint8 *buffer = new uint8[getImageSize()];
@@ -333,8 +336,9 @@ int main(int argc, char *argv[])
         
         newName = path.append(newName);
         
-        cout << newName << endl;
+        //cout << newName << endl;
 
+        
         SaveImage((char*)newName.c_str(), buffer, width, height);   
 //        if (i == 1) {
 //            printImage(buffer, getImageSize());
