@@ -46,7 +46,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-k $(PROJECT_DIR)/MedialAxisTransform/sobel_opt1.cl"
+            argument = "-k $(PROJECT_DIR)/MedialAxisTransform/my_kernel.cl"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

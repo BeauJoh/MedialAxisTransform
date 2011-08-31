@@ -267,12 +267,19 @@ int main(int argc, char *argv[])
 //    size_t localWorksize[3] = { 16, 16 , 1};
 //    size_t globalWorksize[3] =  { RoundUp((int)localWorksize[0], width), RoundUp((int)localWorksize[1], height), RoundUp((int)localWorksize[2], depth) };
 
-    size_t localWorksize[3] = { 1, 1, 1};
-    size_t globalWorksize[3] =  { getImageWidth(), getImageHeight(), depth};
+    //cout << "max work item sizes" << CL_DEVICE_MAX_WORK_ITEM_SIZES << endl;
+    //cout << "max workgroup size is : " << CL_DEVICE_MAX_WORK_GROUP_SIZE << endl;
+    cout << "max kernel size is : " << CL_KERNEL_WORK_GROUP_SIZE << endl;
+    size_t localWorksize[3] = {16, 16, 16};
+    
+    //cout << "Image Width " << getImageWidth() << endl;
+    //cout << "Scaled Image Width " << RoundUp((int)localWorksize[0], getImageWidth()) << endl;
+    
+    size_t globalWorksize[3] =  {getImageWidth(), getImageHeight(), depth};
     
     //  Start up the kernels in the GPUs
     //
-	err = clEnqueueNDRangeKernel(commands, kernel, 3, NULL, globalWorksize, localWorksize, 0, NULL, NULL);
+	err = clEnqueueNDRangeKernel(commands, kernel, 3, NULL, globalWorksize, NULL, NULL, NULL, NULL);
     
 	if (there_was_an_error(err))
 	{
@@ -329,7 +336,9 @@ int main(int argc, char *argv[])
         cout << newName << endl;
 
         SaveImage((char*)newName.c_str(), buffer, width, height);   
-        
+//        if (i == 1) {
+//            printImage(buffer, getImageSize());
+//        }
         //clear buffer was originally used as a test to ensure new images 
         //are being populated
         //clearImageBuffer();
