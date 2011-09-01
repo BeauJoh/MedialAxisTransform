@@ -89,18 +89,6 @@ void FFT(short int dir,long m, float *x,float *y)
     return;
 }
 
-float discreteVoxelFilt1(float x, float y, float z){
-    return - x * exp(-((pow(x,2)+pow(y,2)+pow(z,2))/2));
-}
-
-float discreteVoxelFilt2(float x, float y, float z){
-    return - x * exp(-((pow(x,2)+pow(y,2)+pow(z,2))/2));
-}
-
-float discreteVoxelFilt3(float x, float y, float z){
-    return - x * exp(-((pow(x,2)+pow(y,2)+pow(z,2))/2));
-}
-
 __kernel
 void sobel3D(__read_only image3d_t srcImg,
            __write_only image3d_t dstImg,
@@ -114,6 +102,26 @@ void sobel3D(__read_only image3d_t srcImg,
     if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
         return;
     }
+    
+    float filtX[3] = {-1, 0, 1};
+    float filtY[3] = {-1, 0, 1};
+    float filtZ[3] = {-1, 0, 1};
+    
+    float dvfXYZ[3][3][3];
+    float dvfYZX[3][3][3];
+    float dvfZXY[3][3][3];
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            for(int k = 0; k < 3; k++){
+                dvfXYZ[i][j][k] = - filtX[i] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
+                dvfYZX[i][j][k] = - filtY[j] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
+                dvfZXY[i][j][k] = - filtZ[k] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
+            }
+        }
+    }
+    
+    
     //rest goes here!
     
 }

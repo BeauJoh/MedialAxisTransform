@@ -36,10 +36,6 @@ void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int 
     return;
 }
 
-// these define a square in the X-Y plane clockwise order from the lower left,
-GLdouble verts[4][3] = { { -1.0, -1.0, 0.0}, {-1.0, 1.0, 0.0}, {1.0, 1.0, 0.0}, {1.0, -1.0, 0.0} };
-GLdouble centervert[3] = { 0.0, 0.0, 0.0 };
-
 void createDataSetTexture(){
 
     glGenTextures(1, &tex);
@@ -134,24 +130,24 @@ void display(void)
     glRotatef(cameraXDegrees,1.0f,0.0f,0.0f);		// Rotate On The X Axis
     glRotatef(cameraYDegrees,0.0f,1.0f,0.0f);		// Rotate On The Y Axis
     
-    centervert[2] = sin(3000.0) + 1.0;
     
 	// draw the pyramid with the fluctuating apex
 	// turn on 3d texturing if its not already
 	glEnable(GL_TEXTURE_3D);
 	glBegin(GL_TRIANGLES);
     // texture coordinates are always specified before the vertex they apply to.
-    for (x = 0; x <= 3; x++) {
+    for (x = 0; x <= __imageDepth; x++) {
         glColor4d(1.0, 0.0, 0.0, 1.0);
-        glTexCoord3d(centervert[0], centervert[1], centervert[2]);
+        glTexCoord3d(-1.0f, 1.0f, x);
         //glTexCoord3d(centervert[0], centervert[1], 2.0);			// texture stretches rather than glides over the surface with this
-        glVertex3d(centervert[0], centervert[1], centervert[2]);
-        
-        glTexCoord3d(verts[x][0], verts[x][1], verts[x][2]);
-        glVertex3d(verts[x][0], verts[x][1], verts[x][2]);
-        
-        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
-        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
+        //plot all sides for a parrallel plane
+//        glVertex3d(centervert[0], centervert[1], centervert[2]);
+//        
+//        glTexCoord3d(verts[x][0], verts[x][1], verts[x][2]);
+//        glVertex3d(verts[x][0], verts[x][1], verts[x][2]);
+//        
+//        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
+//        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
         glColor4d(0.0, 0.0, 0.0, 1.0);
 
     }
@@ -159,29 +155,7 @@ void display(void)
     
 	// we don't want the lines and points textured, so disable 3d texturing for a bit
 	glDisable(GL_TEXTURE_3D);
-	glBegin(GL_LINES);
-    // draw the grids
-    for (z = 0; z < 2.0; z += 0.5) {
-        for (y = -1.0; y <= 1.0; y += 0.5) {
-            glVertex3d(y, -1.0, z);	
-            glVertex3d(y, 1.0, z);
-        }
-        for (y = -1.0; y <= 1.0; y += 0.5) {
-            glVertex3d(-1.0, y, z);	
-            glVertex3d(1.0, y, z);
-        }
-    }
-    // draw the wire frame size of the pyramid
-    for (x = 0; x < 4; x++) {
-        glVertex3d(centervert[0], centervert[1], centervert[2]);
-        glVertex3d(verts[x][0], verts[x][1], verts[x][2]);
-    }
-	glEnd();
-	// draw the apex point
-	glBegin(GL_POINTS);
-    glVertex3d(centervert[0], centervert[1], centervert[2]);
-	glEnd();
-    
+	    
 	glutSwapBuffers();
 }
 
