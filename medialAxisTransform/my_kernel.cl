@@ -89,6 +89,35 @@ void FFT(short int dir,long m, float *x,float *y)
     return;
 }
 
+float discreteVoxelFilt1(float x, float y, float z){
+    return - x * exp(-((pow(x,2)+pow(y,2)+pow(z,2))/2));
+}
+
+float discreteVoxelFilt2(float x, float y, float z){
+    return - x * exp(-((pow(x,2)+pow(y,2)+pow(z,2))/2));
+}
+
+float discreteVoxelFilt3(float x, float y, float z){
+    return - x * exp(-((pow(x,2)+pow(y,2)+pow(z,2))/2));
+}
+
+__kernel
+void sobel3D(__read_only image3d_t srcImg,
+           __write_only image3d_t dstImg,
+           sampler_t sampler,
+           int width, int height, int depth)
+{
+    int x = (int)get_global_id(0);
+    int y = (int)get_global_id(1);
+    int z = (int)get_global_id(2);
+    
+    if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
+        return;
+    }
+    //rest goes here!
+    
+}
+
 __kernel
 void sobel(__read_only image3d_t srcImg,
            __write_only image3d_t dstImg,

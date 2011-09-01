@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 	
 	// Create the compute kernel in the program we wish to run
 	//
-	kernel = clCreateKernel(program, "sobel", &err);
+	kernel = clCreateKernel(program, "mrep", &err);
     
 	if (!kernel || err != CL_SUCCESS){
 		cout << "Failed to create compute kernel!" << endl;
@@ -314,8 +314,6 @@ int main(int argc, char *argv[])
     
     //printImage(buffer, getImageSize()*depth);
         
-    plotMain(argc, argv, bigBuffer, getImageWidth(), getImageHeight(), depth);
-
     //load all images into a buffer
     for (int i = 0; i < depth; i++) {
         uint8 *buffer = new uint8[getImageSize()];
@@ -354,6 +352,8 @@ int main(int argc, char *argv[])
     cout << "RUN FINISHED SUCCESSFULLY!" << endl;
     
     
+    plotMain(argc, argv, bigBuffer, getImageWidth(), getImageHeight(), depth);
+
     
     // Shutdown and cleanup
 	//
