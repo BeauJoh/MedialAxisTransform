@@ -1,6 +1,7 @@
 
 #include "openCLUtilities.h"
 #include "RGBAUtilities.h"
+#include "openGLVisualiser.h"
 
 #include <getopt.h>
 #include <string>
@@ -177,7 +178,7 @@ int main(int argc, char *argv[])
 	
 	// Create the compute kernel in the program we wish to run
 	//
-	kernel = clCreateKernel(program, "sobel", &err);
+	kernel = clCreateKernel(program, "mrep", &err);
     
 	if (!kernel || err != CL_SUCCESS){
 		cout << "Failed to create compute kernel!" << endl;
@@ -333,8 +334,9 @@ int main(int argc, char *argv[])
         
         newName = path.append(newName);
         
-        cout << newName << endl;
+        //cout << newName << endl;
 
+        
         SaveImage((char*)newName.c_str(), buffer, width, height);   
 //        if (i == 1) {
 //            printImage(buffer, getImageSize());
@@ -349,7 +351,8 @@ int main(int argc, char *argv[])
     
     cout << "RUN FINISHED SUCCESSFULLY!" << endl;
     
-    
+    plotMain(argc, argv, bigBuffer, getImageWidth(), getImageHeight(), depth);
+
     
     // Shutdown and cleanup
 	//

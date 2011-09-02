@@ -10,7 +10,7 @@
 
 
 float4 getFillColour(){
-    return (float4) (0.5f,0.5f,0.5f,1);
+    return (float4) (1.0f,0.5f,0.0f,1);
 }
 
 /*
@@ -19,7 +19,7 @@ float4 getFillColour(){
  dir =  1 gives forward transform
  dir = -1 gives reverse transform 
  */
-void FFT(short int dir,long m, double *x,double *y)
+void FFT(short int dir,long m, float *x,float *y)
 {
     long n,i,i1,j,k,i2,l,l1,l2;
     double c1,c2,tx,ty,t1,t2,u1,u2,z;
@@ -72,10 +72,10 @@ void FFT(short int dir,long m, double *x,double *y)
             u2 = u1 * c2 + u2 * c1;
             u1 = z;
         }
-        c2 = native_sqrt((1.0 - c1) / 2.0);
+        c2 = sqrt((1.0 - c1) / 2.0);
         if (dir == 1) 
             c2 = -c2;
-        c1 = native_sqrt((1.0 + c1) / 2.0);
+        c1 = sqrt((1.0 + c1) / 2.0);
     }
     
     /* Scaling for forward transform */
@@ -87,6 +87,74 @@ void FFT(short int dir,long m, double *x,double *y)
     }
     
     return;
+}
+
+typedef struct {
+    float real;
+    float imag; 
+} Composition;
+
+__kernel
+void sobel3D(__read_only image3d_t srcImg,
+           __write_only image3d_t dstImg,
+           sampler_t sampler,
+           int width, int height, int depth)
+{
+    Composition * myComp;
+    
+    int x = (int)get_global_id(0);
+    int y = (int)get_global_id(1);
+    int z = (int)get_global_id(2);
+    
+    if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
+        return;
+    }
+    
+    float filtX[3] = {-1, 0, 1};
+    float filtY[3] = {-1, 0, 1};
+    float filtZ[3] = {-1, 0, 1};
+    
+    float dvfXYZ[3][3][3];
+    float dvfYZX[3][3][3];
+    float dvfZXY[3][3][3];
+
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            for(int k = 0; k < 3; k++){
+                dvfXYZ[i][j][k] = - filtX[i] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
+                dvfYZX[i][j][k] = - filtY[j] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
+                dvfZXY[i][j][k] = - filtZ[k] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
+            }
+        }
+    }
+    
+
+//    float A1[6][3][3];
+//    float A1i[6][3][3];
+
+//    for (int sliceIWant = 0; sliceIWant < 3; sliceIWant ++){
+//        for (int columnIWant = 0; columnIWant < 3; columnIWant ++){
+//            
+//            float * aRow = &A1[0][0][0];
+//            float * aRowImag = &A1i[0][0][0];
+//            
+//            for (int i = 0; i < 3; i++){
+//                *aRow++ = dvfXYZ[i][columnIWant][sliceIWant];
+//            }
+//            FFT( (short int)1, (long)3, (float*)aRow, (float*)aRowImag);
+//            
+//        }
+//    }
+
+//    float * aRow = 0.0f;
+//    float * aRowImag = 0.0f;
+//    
+//    FFT( (short int)1, (long)2, aRow, aRowImag);
+
+    //float * A1 = dvfXYZ[0][][];
+    //FFT(1,3,dvfXYZ[0][0][0],dvfXYZ[0][0][0]);
+    //rest goes here!
+    
 }
 
 __kernel
