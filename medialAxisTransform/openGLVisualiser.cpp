@@ -59,9 +59,7 @@ void LoadTexture(unsigned char * data, int depth)
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
 }
 
-void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){
-    //    __dataSet = new unsigned char[imageWidth*imageHeight*imageDepth*__imageChannels];
-    
+void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){    
     __imageWidth = imageWidth;
     __imageHeight = imageHeight;
     __imageDepth = imageDepth;
@@ -84,8 +82,10 @@ void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int 
 void Init(void)
 {    
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     
+    glClearColor(0, 0.5, 1, 1);
+
     //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     //glClearColor(1.0, 1.0, 1.0, 1.0);
 	//glColor4d(0.0, 0.0, 0.0, 1.0);
@@ -127,8 +127,9 @@ void display(void)
 {	
     glShadeModel(GL_FLAT);
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+    glClear(GL_COLOR_BUFFER_BIT );
+    	
+    glLoadIdentity();
     
     //glutPrint(0, 0, 1, GLUT_BITMAP_TIMES_ROMAN_24, "bananas", 1, 0.5, 0, 0.1);
     glTranslated(cameraX, cameraY, cameraZ);
@@ -143,7 +144,7 @@ void display(void)
         
         glBindTexture(GL_TEXTURE_2D, textures[i]);   // choose the texture to use.
         
-        glColor4f(1, .5, 0, 0.3);
+        glColor4f(1, .5, 0, 1);
         
         glBegin( GL_QUADS );
         glTexCoord2d(0.0,0.0); glVertex3d(0.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);

@@ -2511,9 +2511,9 @@
 				</dict>
 			</array>
 		</dict>
-		<real>336634366.43390298</real>
-		<string>{3014, 798}</string>
-		<string>{459, 0}</string>
+		<real>336635194.69831401</real>
+		<string>{3978, 1152}</string>
+		<string>{3840, 21}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -3516,7 +3516,7 @@
 				<integer>286</integer>
 			</dict>
 			<key>NS.time</key>
-			<real>336634288.73491198</real>
+			<real>336635177.663158</real>
 		</dict>
 		<dict>
 			<key>$classes</key>
@@ -3527,7 +3527,7 @@
 			<key>$classname</key>
 			<string>NSDate</string>
 		</dict>
-		<string>Today at 3:31 PM</string>
+		<string>Today at 3:46 PM</string>
 		<integer>234</integer>
 		<string>MedialAxisTransform</string>
 		<dict>
@@ -4578,11 +4578,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>409</integer>
+					<integer>408</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>400</integer>
+					<integer>412</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -4610,7 +4610,7 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>408</integer>
+				<integer>407</integer>
 			</dict>
 			<key>DocumentLocation</key>
 			<dict>
@@ -4707,27 +4707,18 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>407</integer>
+				<integer>406</integer>
 			</dict>
 			<key>documentURL</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>406</integer>
+				<integer>150</integer>
 			</dict>
 			<key>timestamp</key>
 			<dict>
 				<key>CF$UID</key>
 				<integer>0</integer>
 			</dict>
-		</dict>
-		<dict>
-			<key>$class</key>
-			<dict>
-				<key>CF$UID</key>
-				<integer>44</integer>
-			</dict>
-			<key>NS.string</key>
-			<string>file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp</string>
 		</dict>
 		<dict>
 			<key>$classes</key>
@@ -4776,11 +4767,11 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>410</integer>
+					<integer>409</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>411</integer>
+					<integer>410</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -4788,13 +4779,14 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>412</integer>
+					<integer>411</integer>
 				</dict>
 			</array>
 		</dict>
-		<real>336634366.43566501</real>
-		<string>{3014, 798}</string>
-		<string>{459, 0}</string>
+		<real>336635194.70002401</real>
+		<string>{3978, 1152}</string>
+		<string>{3840, 21}</string>
+		<string>display(void)</string>
 		<string>Xcode.IDEKit.EditorDocument.SourceCode</string>
 		<dict>
 			<key>$class</key>
@@ -4993,7 +4985,7 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>408</integer>
+				<integer>407</integer>
 			</dict>
 			<key>DocumentLocation</key>
 			<dict>
