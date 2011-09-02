@@ -89,12 +89,19 @@ void FFT(short int dir,long m, float *x,float *y)
     return;
 }
 
+typedef struct {
+    float real;
+    float imag; 
+} Composition;
+
 __kernel
 void sobel3D(__read_only image3d_t srcImg,
            __write_only image3d_t dstImg,
            sampler_t sampler,
            int width, int height, int depth)
 {
+    Composition * myComp;
+    
     int x = (int)get_global_id(0);
     int y = (int)get_global_id(1);
     int z = (int)get_global_id(2);
@@ -121,7 +128,31 @@ void sobel3D(__read_only image3d_t srcImg,
         }
     }
     
-    
+
+//    float A1[6][3][3];
+//    float A1i[6][3][3];
+
+//    for (int sliceIWant = 0; sliceIWant < 3; sliceIWant ++){
+//        for (int columnIWant = 0; columnIWant < 3; columnIWant ++){
+//            
+//            float * aRow = &A1[0][0][0];
+//            float * aRowImag = &A1i[0][0][0];
+//            
+//            for (int i = 0; i < 3; i++){
+//                *aRow++ = dvfXYZ[i][columnIWant][sliceIWant];
+//            }
+//            FFT( (short int)1, (long)3, (float*)aRow, (float*)aRowImag);
+//            
+//        }
+//    }
+
+//    float * aRow = 0.0f;
+//    float * aRowImag = 0.0f;
+//    
+//    FFT( (short int)1, (long)2, aRow, aRowImag);
+
+    //float * A1 = dvfXYZ[0][][];
+    //FFT(1,3,dvfXYZ[0][0][0],dvfXYZ[0][0][0]);
     //rest goes here!
     
 }

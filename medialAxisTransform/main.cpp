@@ -351,7 +351,6 @@ int main(int argc, char *argv[])
     
     cout << "RUN FINISHED SUCCESSFULLY!" << endl;
     
-    
     plotMain(argc, argv, bigBuffer, getImageWidth(), getImageHeight(), depth);
 
     

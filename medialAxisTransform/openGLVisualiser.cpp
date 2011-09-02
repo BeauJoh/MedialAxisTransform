@@ -15,8 +15,9 @@ int __imageWidth, __imageHeight, __imageDepth;
 int __imageChannels = 4;
 int cameraX = 0;
 int cameraY = 0; 
-int cameraZ = -3.0f;
-GLuint tex;
+int cameraZ = 0.0f;
+GLuint * textures;
+GLuint texture;
 
 GLfloat degrees = 0.5;
 
@@ -25,9 +26,10 @@ int cameraYDegrees = 0;
 int cameraZDegrees = 0;
 
 void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){
-    __dataSet = new unsigned char[imageWidth*imageHeight*imageDepth*__imageChannels];
+//    __dataSet = new unsigned char[imageWidth*imageHeight*imageDepth*__imageChannels];
+    __dataSet = new unsigned char[imageWidth*imageHeight*4];
     
-    for (int i = 0; i < __imageWidth*__imageHeight*__imageDepth*__imageChannels; i++) {
+    for (int i = 0; i < __imageWidth*__imageHeight*4; i++) {
         __dataSet[i]=dataSet[i];
     }
     __imageWidth = imageWidth;
@@ -36,27 +38,64 @@ void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int 
     return;
 }
 
-void createDataSetTexture(){
+GLuint LoadTexture(int wrap)
+{
+    // allocate a texture name
+    glGenTextures( 1, &texture );
+    
+    // select our current texture
+    glBindTexture( GL_TEXTURE_2D, texture );
+    
+    // select modulate to mix texture with color for shading
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+    
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR_MIPMAP_NEAREST );
+    // when texture area is large, bilinear filter the first mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    
+    // if wrap is true, the texture wraps over at the edges (repeat)
+    //       ... false, the texture ends at the edges (clamp)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+    
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NICEST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
 
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_3D, tex);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-//    glTexParameterf(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NICEST);
-//    glTexParameterf(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // build our texture mipmaps
+    gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, __imageWidth, __imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, __dataSet );
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
+
+    return texture;
+}
+
+void createDataSetTexture(){
     
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, __imageWidth, __imageHeight, __imageDepth, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
+    textures = new GLuint[__imageDepth];
     
+    texture = LoadTexture(0);
+    
+    for (int i = 0; i< __imageDepth; i++) {
+        glGenTextures(1, &textures[i]);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NICEST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
     //glEnable(GL_TEXTURE_3D);
     //delete[] __dataSet;
 }
 
 void Init(void)
 {    
-    glEnable(GL_TEXTURE_3D);
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
 
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -64,34 +103,15 @@ void Init(void)
 	glColor4d(0.0, 0.0, 0.0, 1.0);
     glPointSize(3.0);
     
-    glShadeModel(GL_FLAT);
-
-    glViewport (0, 0, (GLsizei) 1000, (GLsizei) 1000);
+    glShadeModel(GL_SMOOTH);
     
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-    gluPerspective(90, 4.0/3.0, 0.1, 10.0);
+    gluPerspective(90, 3.0/3.0, 0.1, 100.0);
 
-//    glEnable(GL_BLEND);
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glDepthFunc(GL_LEQUAL);
 
-    //glShadeModel(GL_SMOOTH);	
-	//glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-    
-//    glDepthMask(GL_TRUE);
-
-    //glEnable(GL_TEXTURE_BINDING_3D);
-    //glEnable(GL_TEXTURE_GEN_S);
-    //glEnable(GL_TEXTURE_GEN_T);
-    //glEnable(GL_TEXTURE_GEN_R);
-
-    //glViewport(0, 0, -1, -1);
-    //glOrtho(-1.0, 1.0, -1.0, 1.0, -1, 5);
-    //glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 10.0);
-
-    //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glMatrixMode(GL_MODELVIEW);
     
 	glLoadIdentity();
@@ -114,10 +134,7 @@ void glutPrint(float x, float y, float z, void * font, char* text, float r, floa
 
 void display(void)
 {	
-    float y, z;
-	int x;
-    
-    glBindTexture(GL_TEXTURE_3D, tex);   // choose the texture to use.
+    glShadeModel(GL_FLAT);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -126,19 +143,30 @@ void display(void)
     //draw data here!
     //plotDataSet();
     glTranslated(cameraX, cameraY, cameraZ);
-
+    glTranslated(0.0f, 0.0f, -(__imageDepth+2));
+    
     glRotatef(cameraXDegrees,1.0f,0.0f,0.0f);		// Rotate On The X Axis
     glRotatef(cameraYDegrees,0.0f,1.0f,0.0f);		// Rotate On The Y Axis
     
     
 	// draw the pyramid with the fluctuating apex
 	// turn on 3d texturing if its not already
-	glEnable(GL_TEXTURE_3D);
-	glBegin(GL_TRIANGLES);
+	glEnable(GL_TEXTURE_2D);
     // texture coordinates are always specified before the vertex they apply to.
-    for (x = 0; x <= __imageDepth; x++) {
-        glColor4d(1.0, 0.0, 0.0, 1.0);
-        glTexCoord3d(-1.0f, 1.0f, x);
+    for (int i = 0; i <= __imageDepth; i++) {
+        
+        glBindTexture(GL_TEXTURE_2D, texture);   // choose the texture to use.
+
+
+        
+        glBegin( GL_QUADS );
+        glTexCoord2d(0.0,0.0); glVertex3d(0.0,0.0,i);
+        glTexCoord2d(1.0,0.0); glVertex3d(1.0,0.0,i);
+        glTexCoord2d(1.0,1.0); glVertex3d(1.0,1.0,i);
+        glTexCoord2d(0.0,1.0); glVertex3d(0.0,1.0,i);
+        glEnd();
+
+        
         //glTexCoord3d(centervert[0], centervert[1], 2.0);			// texture stretches rather than glides over the surface with this
         //plot all sides for a parrallel plane
 //        glVertex3d(centervert[0], centervert[1], centervert[2]);
@@ -148,13 +176,11 @@ void display(void)
 //        
 //        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
 //        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
-        glColor4d(0.0, 0.0, 0.0, 1.0);
-
     }
-	glEnd();
-    
+    glColor4d(0.0, 0.0, 0.0, 1.0);
+
 	// we don't want the lines and points textured, so disable 3d texturing for a bit
-	glDisable(GL_TEXTURE_3D);
+	glDisable(GL_TEXTURE_2D);
 	    
 	glutSwapBuffers();
 }
@@ -169,15 +195,17 @@ void mouseClick(int button, int state, int x, int y){
 void input(unsigned char character, int xx, int yy) {
 	switch(character) {
 		//case ' ' : changePaused(); break; 
-		case 27  : exit(0);
+		case 27  : exit(0); break;
+        // q or esc to quit    
+        case 113 : exit(0); break;
         //up
-        case 119 : std::cout << "up pressed" << std::endl; cameraY+=1; break;
+        case 119 : std::cout << "up pressed" << std::endl; cameraY-=1; break;
         //down
-        case 115 : std::cout << "down pressed" << std::endl; cameraY -=1; break;
+        case 115 : std::cout << "down pressed" << std::endl; cameraY +=1; break;
         //left
-        case 97 : std::cout << "left pressed" << std::endl; cameraX -=1; break;
+        case 97 : std::cout << "left pressed" << std::endl; cameraX +=1; break;
         //right
-        case 100 : std::cout << "right pressed" << std::endl; cameraX +=1; break;
+        case 100 : std::cout << "right pressed" << std::endl; cameraX -=1; break;
         //zoom in
         case 114 : std::cout << "zoom in" << std::endl; cameraZ +=1; break;
         //zoom out
@@ -187,9 +215,9 @@ void input(unsigned char character, int xx, int yy) {
 
         case 108 : std::cout << "rotate down" << std::endl; cameraYDegrees -=1; break;
             
-        case 105 : std::cout << "rotate left" << std::endl; cameraXDegrees -=1; break;
+        case 105 : std::cout << "rotate left" << std::endl; cameraXDegrees +=1; break;
 
-        case 107 : std::cout << "rotate right" << std::endl; cameraXDegrees +=1; break;
+        case 107 : std::cout << "rotate right" << std::endl; cameraXDegrees -=1; break;
 
 
         default: std::cout << "unknown key pressed : " << (int)character << std::endl;
@@ -234,6 +262,8 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
 	glutInitWindowSize(1000, 1000);
 	glutInitWindowPosition (0, 0);
 	glutCreateWindow("Data Visualiser");
+    
+   
     
     createDataSetTexture();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
