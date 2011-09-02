@@ -79,6 +79,33 @@ void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int 
     return;
 }
 
+void displayUsability(void){
+    std::cout << "Welcome to the volume render. To navigate the volume:" << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "Movement"<< std::endl;
+    std::cout << "Up:\t\t\t\t\tW" << std::endl;
+    std::cout << "Down:\t\t\t\t\tS" << std::endl;
+    std::cout << "Left:\t\t\t\t\tA" << std::endl;
+    std::cout << "Right:\t\t\t\t\tD" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Zoom"<< std::endl;
+    std::cout << "In:\t\t\t\t\tR" << std::endl;
+    std::cout << "Out:\t\t\t\t\tF" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Rotation"<< std::endl;
+    std::cout << "Up:\t\t\t\t\tI" << std::endl;
+    std::cout << "Down:\t\t\t\t\tK" << std::endl;
+    std::cout << "Left:\t\t\t\t\tJ" << std::endl;
+    std::cout << "Right:\t\t\t\t\tL" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Quit"<< std::endl;
+    std::cout << "\t\t\t\t\tQ" << std::endl;
+    std::cout << "\t\t\t\t\tEsc" << std::endl;
+
+
+}
+
 void Init(void)
 {    
     glEnable(GL_TEXTURE_2D);
@@ -93,7 +120,11 @@ void Init(void)
     
     glShadeModel(GL_SMOOTH);
     
-    
+//    glEnable (GL_STENCIL_TEST);
+//    glStencilFunc (GL_ALWAYS, 0x1, 0x1);
+//    glStencilFunc (GL_EQUAL, 0x0, 0x1);
+//    
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     gluPerspective(90, 3.0/3.0, 0.1, 100.0);
@@ -101,9 +132,20 @@ void Init(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    //glHint(GL_CLIP_VOLUME_CLIPPING_HINT_EXT,GL_FASTEST);
+    
+    
     glDepthFunc(GL_LEQUAL);
     
+    glDisable(GL_DEPTH_TEST);
+    
+    glDisable(GL_CULL_FACE);
+    //glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    
     glMatrixMode(GL_MODELVIEW);
+    
+    displayUsability();
     
 	glLoadIdentity();
 }
@@ -127,7 +169,7 @@ void display(void)
 {	
     glShadeModel(GL_FLAT);
     
-    glClear(GL_COLOR_BUFFER_BIT );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     	
     glLoadIdentity();
     
@@ -145,7 +187,7 @@ void display(void)
         glBindTexture(GL_TEXTURE_2D, textures[i]);   // choose the texture to use.
         
         glColor4f(1, .5, 0, 1);
-        
+
         glBegin( GL_QUADS );
         glTexCoord2d(0.0,0.0); glVertex3d(0.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);
         glTexCoord2d(1.0,0.0); glVertex3d(1.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);
@@ -175,25 +217,25 @@ void input(unsigned char character, int xx, int yy) {
             // q or esc to quit    
         case 113 : exit(0); break;
             //up
-        case 119 : std::cout << "up pressed" << std::endl; cameraY-=1; break;
+        case 119 : cameraY-=1; break;
             //down
-        case 115 : std::cout << "down pressed" << std::endl; cameraY +=1; break;
+        case 115 : cameraY +=1; break;
             //left
-        case 97 : std::cout << "left pressed" << std::endl; cameraX +=1; break;
+        case 97 :  cameraX +=1; break;
             //right
-        case 100 : std::cout << "right pressed" << std::endl; cameraX -=1; break;
+        case 100 : cameraX -=1; break;
             //zoom in
-        case 114 : std::cout << "zoom in" << std::endl; cameraZ +=1; break;
+        case 114 : cameraZ +=1; break;
             //zoom out
-        case 102 : std::cout << "zoom out" << std::endl; cameraZ -=1; break;
+        case 102 : cameraZ -=1; break;
             
-        case 106 : std::cout << "rotate up" << std::endl; cameraYDegrees +=1; break;
+        case 106 : cameraYDegrees +=1; break;
             
-        case 108 : std::cout << "rotate down" << std::endl; cameraYDegrees -=1; break;
+        case 108 : cameraYDegrees -=1; break;
             
-        case 105 : std::cout << "rotate left" << std::endl; cameraXDegrees +=1; break;
+        case 105 : cameraXDegrees +=1; break;
             
-        case 107 : std::cout << "rotate right" << std::endl; cameraXDegrees -=1; break;
+        case 107 : cameraXDegrees -=1; break;
             
             
         default: std::cout << "unknown key pressed : " << (int)character << std::endl;
