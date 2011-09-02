@@ -20,6 +20,9 @@ GLuint * textures;
 
 GLfloat degrees = 0.5;
 
+float sliceDepth = 0.3;
+float sliceScalingFactor = 14.0f;
+
 int cameraXDegrees = 0;
 int cameraYDegrees = 0;
 int cameraZDegrees = 0;
@@ -90,10 +93,13 @@ void Init(void)
     
     glShadeModel(GL_SMOOTH);
     
+    
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     gluPerspective(90, 3.0/3.0, 0.1, 100.0);
     
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glDepthFunc(GL_LEQUAL);
     
@@ -124,45 +130,29 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
     
-    
-    //draw data here!
-    //plotDataSet();
+    //glutPrint(0, 0, 1, GLUT_BITMAP_TIMES_ROMAN_24, "bananas", 1, 0.5, 0, 0.1);
     glTranslated(cameraX, cameraY, cameraZ);
     glTranslated(0.0f, 0.0f, -(__imageDepth+2));
     
     glRotatef(cameraXDegrees,1.0f,0.0f,0.0f);		// Rotate On The X Axis
     glRotatef(cameraYDegrees,0.0f,1.0f,0.0f);		// Rotate On The Y Axis
-    
-    
-	// draw the pyramid with the fluctuating apex
-	// turn on 3d texturing if its not already
+
 	glEnable(GL_TEXTURE_2D);
     // texture coordinates are always specified before the vertex they apply to.
-    for (int i = 0; i <= __imageDepth; i++) {
+    for (int i = 0; i < __imageDepth; i++) {
         
         glBindTexture(GL_TEXTURE_2D, textures[i]);   // choose the texture to use.
         
-        
+        glColor4f(1, .5, 0, 0.3);
         
         glBegin( GL_QUADS );
-        glTexCoord2d(0.0,0.0); glVertex3d(0.0,0.0,i);
-        glTexCoord2d(1.0,0.0); glVertex3d(1.0,0.0,i);
-        glTexCoord2d(1.0,1.0); glVertex3d(1.0,1.0,i);
-        glTexCoord2d(0.0,1.0); glVertex3d(0.0,1.0,i);
+        glTexCoord2d(0.0,0.0); glVertex3d(0.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);
+        glTexCoord2d(1.0,0.0); glVertex3d(1.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);
+        glTexCoord2d(1.0,1.0); glVertex3d(1.0*sliceScalingFactor,1.0*sliceScalingFactor,i*sliceDepth);
+        glTexCoord2d(0.0,1.0); glVertex3d(0.0*sliceScalingFactor,1.0*sliceScalingFactor,i*sliceDepth);
         glEnd();
         
-        
-        //glTexCoord3d(centervert[0], centervert[1], 2.0);			// texture stretches rather than glides over the surface with this
-        //plot all sides for a parrallel plane
-        //        glVertex3d(centervert[0], centervert[1], centervert[2]);
-        //        
-        //        glTexCoord3d(verts[x][0], verts[x][1], verts[x][2]);
-        //        glVertex3d(verts[x][0], verts[x][1], verts[x][2]);
-        //        
-        //        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
-        //        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
     }
-    //glColor4d(0.0, 0.0, 0.0, 1.0);
     
 	// we don't want the lines and points textured, so disable 3d texturing for a bit
 	glDisable(GL_TEXTURE_2D);

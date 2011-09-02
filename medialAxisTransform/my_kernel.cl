@@ -10,7 +10,7 @@
 
 
 float4 getFillColour(){
-    return (float4) (0.5f,0.5f,0.5f,1);
+    return (float4) (1.0f,0.5f,0.0f,1);
 }
 
 /*
