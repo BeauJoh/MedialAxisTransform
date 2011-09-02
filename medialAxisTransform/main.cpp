@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 	
 	// Create the compute kernel in the program we wish to run
 	//
-	kernel = clCreateKernel(program, "mrep", &err);
+	kernel = clCreateKernel(program, "sobel", &err);
     
 	if (!kernel || err != CL_SUCCESS){
 		cout << "Failed to create compute kernel!" << endl;

@@ -17,7 +17,6 @@ int cameraX = 0;
 int cameraY = 0; 
 int cameraZ = 0.0f;
 GLuint * textures;
-GLuint texture;
 
 GLfloat degrees = 0.5;
 
@@ -25,26 +24,13 @@ int cameraXDegrees = 0;
 int cameraYDegrees = 0;
 int cameraZDegrees = 0;
 
-void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){
-//    __dataSet = new unsigned char[imageWidth*imageHeight*imageDepth*__imageChannels];
-    __dataSet = new unsigned char[imageWidth*imageHeight*4];
-    
-    for (int i = 0; i < __imageWidth*__imageHeight*4; i++) {
-        __dataSet[i]=dataSet[i];
-    }
-    __imageWidth = imageWidth;
-    __imageHeight = imageHeight;
-    __imageDepth = imageDepth;
-    return;
-}
-
-GLuint LoadTexture(int wrap)
+void LoadTexture(unsigned char * data, int depth)
 {
     // allocate a texture name
-    glGenTextures( 1, &texture );
+    glGenTextures( 1, &textures[depth]);
     
     // select our current texture
-    glBindTexture( GL_TEXTURE_2D, texture );
+    glBindTexture( GL_TEXTURE_2D, textures[depth] );
     
     // select modulate to mix texture with color for shading
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
@@ -63,55 +49,54 @@ GLuint LoadTexture(int wrap)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NICEST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
-
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
+    
     // build our texture mipmaps
     gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, __imageWidth, __imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, __dataSet );
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
-
-    return texture;
 }
 
-void createDataSetTexture(){
+void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){
+    //    __dataSet = new unsigned char[imageWidth*imageHeight*imageDepth*__imageChannels];
+    
+    __imageWidth = imageWidth;
+    __imageHeight = imageHeight;
+    __imageDepth = imageDepth;
     
     textures = new GLuint[__imageDepth];
     
-    texture = LoadTexture(0);
+    __dataSet = new unsigned char[__imageWidth*__imageHeight*4];
     
-    for (int i = 0; i< __imageDepth; i++) {
-        glGenTextures(1, &textures[i]);
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
-
-    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NICEST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    for (int j = 0; j < imageDepth; j++) {
+        for (int i = 0; i < __imageWidth*__imageHeight*4; i++) {
+            __dataSet[i]=dataSet[i+(j*__imageWidth*__imageHeight*4)];
+        }
+        
+        LoadTexture(__dataSet, j);
     }
-    //glEnable(GL_TEXTURE_3D);
-    //delete[] __dataSet;
+    
+    return;
 }
 
 void Init(void)
 {    
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
-
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-	glColor4d(0.0, 0.0, 0.0, 1.0);
-    glPointSize(3.0);
+    
+    //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    //glClearColor(1.0, 1.0, 1.0, 1.0);
+	//glColor4d(0.0, 0.0, 0.0, 1.0);
+    //glPointSize(3.0);
     
     glShadeModel(GL_SMOOTH);
     
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     gluPerspective(90, 3.0/3.0, 0.1, 100.0);
-
+    
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glDepthFunc(GL_LEQUAL);
-
+    
     glMatrixMode(GL_MODELVIEW);
     
 	glLoadIdentity();
@@ -135,10 +120,10 @@ void glutPrint(float x, float y, float z, void * font, char* text, float r, floa
 void display(void)
 {	
     glShadeModel(GL_FLAT);
-
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-
+    
     
     //draw data here!
     //plotDataSet();
@@ -155,9 +140,9 @@ void display(void)
     // texture coordinates are always specified before the vertex they apply to.
     for (int i = 0; i <= __imageDepth; i++) {
         
-        glBindTexture(GL_TEXTURE_2D, texture);   // choose the texture to use.
-
-
+        glBindTexture(GL_TEXTURE_2D, textures[i]);   // choose the texture to use.
+        
+        
         
         glBegin( GL_QUADS );
         glTexCoord2d(0.0,0.0); glVertex3d(0.0,0.0,i);
@@ -165,23 +150,23 @@ void display(void)
         glTexCoord2d(1.0,1.0); glVertex3d(1.0,1.0,i);
         glTexCoord2d(0.0,1.0); glVertex3d(0.0,1.0,i);
         glEnd();
-
+        
         
         //glTexCoord3d(centervert[0], centervert[1], 2.0);			// texture stretches rather than glides over the surface with this
         //plot all sides for a parrallel plane
-//        glVertex3d(centervert[0], centervert[1], centervert[2]);
-//        
-//        glTexCoord3d(verts[x][0], verts[x][1], verts[x][2]);
-//        glVertex3d(verts[x][0], verts[x][1], verts[x][2]);
-//        
-//        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
-//        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
+        //        glVertex3d(centervert[0], centervert[1], centervert[2]);
+        //        
+        //        glTexCoord3d(verts[x][0], verts[x][1], verts[x][2]);
+        //        glVertex3d(verts[x][0], verts[x][1], verts[x][2]);
+        //        
+        //        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
+        //        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
     }
     glColor4d(0.0, 0.0, 0.0, 1.0);
-
+    
 	// we don't want the lines and points textured, so disable 3d texturing for a bit
 	glDisable(GL_TEXTURE_2D);
-	    
+    
 	glutSwapBuffers();
 }
 
@@ -194,32 +179,32 @@ void mouseClick(int button, int state, int x, int y){
 
 void input(unsigned char character, int xx, int yy) {
 	switch(character) {
-		//case ' ' : changePaused(); break; 
+            //case ' ' : changePaused(); break; 
 		case 27  : exit(0); break;
-        // q or esc to quit    
+            // q or esc to quit    
         case 113 : exit(0); break;
-        //up
+            //up
         case 119 : std::cout << "up pressed" << std::endl; cameraY-=1; break;
-        //down
+            //down
         case 115 : std::cout << "down pressed" << std::endl; cameraY +=1; break;
-        //left
+            //left
         case 97 : std::cout << "left pressed" << std::endl; cameraX +=1; break;
-        //right
+            //right
         case 100 : std::cout << "right pressed" << std::endl; cameraX -=1; break;
-        //zoom in
+            //zoom in
         case 114 : std::cout << "zoom in" << std::endl; cameraZ +=1; break;
-        //zoom out
+            //zoom out
         case 102 : std::cout << "zoom out" << std::endl; cameraZ -=1; break;
             
         case 106 : std::cout << "rotate up" << std::endl; cameraYDegrees +=1; break;
-
+            
         case 108 : std::cout << "rotate down" << std::endl; cameraYDegrees -=1; break;
             
         case 105 : std::cout << "rotate left" << std::endl; cameraXDegrees +=1; break;
-
+            
         case 107 : std::cout << "rotate right" << std::endl; cameraXDegrees -=1; break;
-
-
+            
+            
         default: std::cout << "unknown key pressed : " << (int)character << std::endl;
 	}
 }
@@ -246,7 +231,7 @@ void update(void)
 		wait(((float)CLOCKS_PER_SEC / (float) FRAMES_PER_SEC - (float) clocks_elapsed)/(float) CLOCKS_PER_SEC);
 	//clock_ticks = clock();
 	//increaseRotation();
-
+    
     //move data plot?
     
     
@@ -255,19 +240,15 @@ void update(void)
 
 void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth)
 {
-    storeDataSet(dataSet, imageWidth, imageHeight, imageDepth);
-
-	glutInit(&argc, argv);
+    glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(1000, 1000);
 	glutInitWindowPosition (0, 0);
 	glutCreateWindow("Data Visualiser");
     
-   
+    storeDataSet(dataSet, imageWidth, imageHeight, imageDepth);
     
-    createDataSetTexture();
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
     
 	Init();
     glutMouseFunc(&mouseClick);
