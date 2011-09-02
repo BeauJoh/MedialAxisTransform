@@ -162,7 +162,7 @@ void display(void)
         //        glTexCoord3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
         //        glVertex3d(verts[(x+1)%4][0], verts[(x+1)%4][1], verts[(x+1)%4][2]);
     }
-    glColor4d(0.0, 0.0, 0.0, 1.0);
+    //glColor4d(0.0, 0.0, 0.0, 1.0);
     
 	// we don't want the lines and points textured, so disable 3d texturing for a bit
 	glDisable(GL_TEXTURE_2D);
@@ -246,11 +246,10 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
 	glutInitWindowPosition (0, 0);
 	glutCreateWindow("Data Visualiser");
     
+    Init();
+
     storeDataSet(dataSet, imageWidth, imageHeight, imageDepth);
     
-
-    
-	Init();
     glutMouseFunc(&mouseClick);
     glutKeyboardFunc(input);
 	glutDisplayFunc(display);
