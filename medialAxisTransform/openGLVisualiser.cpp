@@ -29,7 +29,7 @@ int cameraZDegrees = 0;
 float colour[4] = {1.0f,1.0f,0.75f,0.25};
 float clearcolour[4] = {1.0f,1.0f,1.0f,1.0f};
 
-//#define RAYCASTING
+#define RAYCASTING
 //uncomment this and try to get it raycasting with 3D texture data
 #ifdef RAYCASTING
 const float kDefaultDistance = 2.25;
@@ -185,6 +185,60 @@ std::string extractfilepath(std::string handedInString){
     return handedInString.substr(0, handedInString.find_last_of('/')+1);
 }
 
+
+unsigned long getFileLength(std::ifstream& file)
+{
+    if(!file.good()) return 0;
+    
+    unsigned long pos=file.tellg();
+    file.seekg(0,std::ios::end);
+    unsigned long len = file.tellg();
+    file.seekg(std::ios::beg);
+    
+    return len;
+}
+
+int loadshader(char* filename, GLchar** ShaderSource)
+{
+    unsigned long len;
+    std::ifstream file;
+    file.open(filename, std::ios::in); // opens as ASCII!
+    if(!file) return -1;
+    
+    len = getFileLength(file);
+    
+    if (len==0) return -2;   // Error: Empty File 
+    
+    *ShaderSource = (char*) new char[len+1];
+    if (*ShaderSource == 0) return -3;   // can't reserve memory
+    
+    // len isn't always strlen cause some characters are stripped in ascii read...
+    // it is important to 0-terminate the real length later, len is just max possible value... 
+    *ShaderSource[len] = 0; 
+    
+    unsigned int i=0;
+    while (file.good())
+    {
+        *ShaderSource[i] = file.get();       // get character from file.
+        if (!file.eof())
+            i++;
+    }
+    
+    *ShaderSource[i] = 0;  // 0-terminate it at the correct position
+    
+    file.close();
+    
+    return 0; // No Error
+}
+
+int unloadshader(GLubyte** ShaderSource)
+{
+    if (*ShaderSource != 0)
+        delete[] *ShaderSource;
+    *ShaderSource = 0;
+}
+
+
 int initShaderWithFile(std::string vertname, std::string fragname) {
     
     GLhandleARB my_program, my_vertex_shader,my_fragment_shader;
@@ -207,6 +261,16 @@ int initShaderWithFile(std::string vertname, std::string fragname) {
         std::cout << "Unable to find GLSL shaders " << fname << " " << vname << std::endl;
     }
     
+//    char** tmpArray = new char*[1];
+//    tmpArray[0] = (char*)my_fragment_shader_source.c_str();
+//    char** tmpArray2 = new char*[1];
+//    tmpArray2[0] = (char*)my_vertex_shader_source.c_str();
+//    
+//    loadshader((char*)fname.c_str(), (GLchar**)tmpArray);
+//    loadshader((char*)vname.c_str(), (GLchar**)tmpArray2);
+
+    //loadshader((char*)fname.c_str(), (GLchar**)my_fragment_shader_source.c_str());
+    //loadshader((char*)vname.c_str(), (GLchar**)my_vertex_shader_source.c_str());
     my_fragment_shader_source = LoadStr( fname);
     my_vertex_shader_source = LoadStr( vname);
     my_program = glCreateProgramObjectARB();
@@ -215,9 +279,11 @@ int initShaderWithFile(std::string vertname, std::string fragname) {
     // Load Shader Sources
     FShaderLength = (int)my_fragment_shader_source.length();
     VShaderLength = (int)my_vertex_shader_source.length();
+    const char * tmp1 = (const char *)my_vertex_shader_source.c_str();
+    const char * tmp2 = (const char *)my_fragment_shader_source.c_str();
 
-    glShaderSourceARB(my_vertex_shader, 1, my_vertex_shader_source.c_str(), &VShaderLength);
-    glShaderSourceARB(my_fragment_shader, 1, (const GLcharARB**)my_fragment_shader_source.c_str(), &FShaderLength);
+    glShaderSourceARB(my_vertex_shader, 1, &tmp1, NULL);
+    glShaderSourceARB(my_fragment_shader, 1, &tmp2, NULL);
     // Compile The Shaders
     glCompileShaderARB(my_vertex_shader);
     glGetObjectParameterivARB(my_vertex_shader,GL_OBJECT_COMPILE_STATUS_ARB, &Vcompiled);
@@ -276,7 +342,7 @@ void resize(int w, int h){
         if (Distance == 0){
             scale = 1;
         }else{
-            scale = 1/abs(kDefaultDistance/(Distance+1.0));
+            scale = 1/ abs(round(kDefaultDistance/(Distance+1.0))) ;
         }
     }
     whratio = w/h;
@@ -587,6 +653,7 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
 	glutInitWindowSize(1000, 1000);
 	glutInitWindowPosition (0, 0);
 	glutCreateWindow("Data Visualiser");
+    
     initgl(dataSet, imageWidth, imageHeight, imageDepth);
     
     glutMouseFunc(&mouseClick);
