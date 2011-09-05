@@ -24,6 +24,10 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <iostream>
+
 void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);
 
 #endif
