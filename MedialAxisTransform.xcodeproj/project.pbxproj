@@ -42,6 +42,7 @@
 		8B19F5CD140C53A3001A1693 /* libpng.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng.framework; path = Library/Frameworks/libpng.framework; sourceTree = SDKROOT; };
 		8B19F5CF140C53AC001A1693 /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
 		8B19F5D1140C5405001A1693 /* my_kernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.opencl; path = my_kernel.cl; sourceTree = "<group>"; };
+		8B33B886141756E500B2EFF1 /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
 		8B3FBABE140E0E3F007972BB /* openGLVisualiser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = openGLVisualiser.cpp; sourceTree = "<group>"; };
 		8B3FBAC0140E0E50007972BB /* openGLVisualiser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = openGLVisualiser.h; sourceTree = "<group>"; };
 		8B3FBAC4140E0EF6007972BB /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -89,17 +90,18 @@
 		8BB5BC10140C526200FAF0AF /* MedialAxisTransform */ = {
 			isa = PBXGroup;
 			children = (
+				8B33B886141756E500B2EFF1 /* global.h */,
 				8BB5BC11140C526200FAF0AF /* main.cpp */,
-				8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */,
-				8B19F5C3140C535A001A1693 /* FileHandler.cpp */,
 				8B19F5C4140C535A001A1693 /* FileHandler.h */,
-				8B19F5C5140C535A001A1693 /* openCLUtilities.cpp */,
-				8B19F5D1140C5405001A1693 /* my_kernel.cl */,
+				8B19F5C3140C535A001A1693 /* FileHandler.cpp */,
 				8B19F5C6140C535A001A1693 /* openCLUtilities.h */,
-				8B19F5C7140C535A001A1693 /* RGBAUtilities.cpp */,
+				8B19F5C5140C535A001A1693 /* openCLUtilities.cpp */,
 				8B19F5C8140C535A001A1693 /* RGBAUtilities.h */,
-				8B3FBABE140E0E3F007972BB /* openGLVisualiser.cpp */,
+				8B19F5C7140C535A001A1693 /* RGBAUtilities.cpp */,
 				8B3FBAC0140E0E50007972BB /* openGLVisualiser.h */,
+				8B3FBABE140E0E3F007972BB /* openGLVisualiser.cpp */,
+				8B19F5D1140C5405001A1693 /* my_kernel.cl */,
+				8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */,
 			);
 			path = MedialAxisTransform;
 			sourceTree = "<group>";

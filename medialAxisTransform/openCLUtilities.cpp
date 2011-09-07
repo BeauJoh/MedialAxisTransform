@@ -8,8 +8,22 @@
 
 #include "openCLUtilities.h"
 
+OpenCLUtilities::OpenCLUtilities(){
+    //constructor
+    fileHandler = new FileHandler();
+    rgbaUtilities = new RGBAUtilities();
+    
+}
 
-char *print_cl_errstring(cl_int err) {
+OpenCLUtilities::~OpenCLUtilities(){
+    //destructor
+    delete fileHandler;
+    rgbaUtilities->cleanup();
+    delete rgbaUtilities;
+    
+}
+
+char * OpenCLUtilities::print_cl_errstring(cl_int err) {
     switch (err) {
         case CL_SUCCESS:                          return strdup("Success!");
         case CL_DEVICE_NOT_FOUND:                 return strdup("Device not found.");
@@ -61,7 +75,7 @@ char *print_cl_errstring(cl_int err) {
     }
 }
 
-cl_bool there_was_an_error(cl_int err){
+cl_bool OpenCLUtilities::there_was_an_error(cl_int err){
     if (err != CL_SUCCESS){
         printf("%s\n", print_cl_errstring(err));
         return 1;
@@ -69,7 +83,7 @@ cl_bool there_was_an_error(cl_int err){
     return 0;
 }
 
-cl_bool doesGPUSupportImageObjects(cl_device_id device_id){
+cl_bool OpenCLUtilities::doesGPUSupportImageObjects(cl_device_id device_id){
     // Make sure the device supports images, otherwise exit 
     cl_bool imageSupport = CL_FALSE; 
     clGetDeviceInfo(device_id, CL_DEVICE_IMAGE_SUPPORT, sizeof(cl_bool), &imageSupport, NULL); 
@@ -79,7 +93,7 @@ cl_bool doesGPUSupportImageObjects(cl_device_id device_id){
     return imageSupport;
 }
 
-void getGPUUnitSupportedImageFormats(cl_context context){
+void OpenCLUtilities::getGPUUnitSupportedImageFormats(cl_context context){
     
     cl_image_format supported_image_formats[1000];
     cl_uint supported_image_format_list_size;
@@ -188,7 +202,7 @@ void getGPUUnitSupportedImageFormats(cl_context context){
     
 }
 
-char *load_program_source(const char *filename)
+char* OpenCLUtilities::load_program_source(const char *filename)
 {
     struct stat statbuf;
     FILE        *fh;
@@ -206,15 +220,15 @@ char *load_program_source(const char *filename)
     return source;
 }
 
-cl_mem LoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format)
+cl_mem OpenCLUtilities::LoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format)
 { 
-    read_png_file(fileName);
+    rgbaUtilities->read_png_file(fileName);
     
-    width = getImageWidth();
-    height = getImageLength();
+    width = rgbaUtilities->getImageWidth();
+    height = rgbaUtilities->getImageLength();
     
-    uint8 *buffer = new uint8[getImageSize()];    
-    memcpy(buffer, getImage(), getImageSize());
+    uint8 *buffer = new uint8[rgbaUtilities->getImageSize()];    
+    memcpy(buffer, rgbaUtilities->getImage(), rgbaUtilities->getImageSize());
     
     format.image_channel_order = CL_RGBA; 
     format.image_channel_data_type = CL_UNORM_INT8;
@@ -227,7 +241,7 @@ cl_mem LoadImage(cl_context context, char *fileName, int &width, int &height, cl
                               &format, 
                               width,
                               height, 
-                              getImageRowPitch(), 
+                              rgbaUtilities->getImageRowPitch(), 
                               buffer, 
                               &errNum);
     
@@ -248,25 +262,25 @@ cl_mem LoadImage(cl_context context, char *fileName, int &width, int &height, cl
 }
 
 
-bool SaveImage(char *fileName, uint8 *buffer, int width, int height) {
+bool OpenCLUtilities::SaveImage(char *fileName, uint8 *buffer, int width, int height) {
     //setImage((uint8*)denormalizeImage((float*)buffer));
     //write_png_file(fileName);
     
     //printImage(downcastToByteAndDenormalize((float*)buffer, getImageSizeInFloats()), getImageSize());
     
 //    setImage(downcastToByteAndDenormalize((float*)buffer, getImageSizeInFloats()));
-    setImage(buffer);
+    rgbaUtilities->setImage(buffer);
 
     //setImageFromFloat(downcastToByteAndDenormalize((float*)buffer, getImageSize()));
     
-    write_png_file(fileName);
+    rgbaUtilities->write_png_file(fileName);
     
     return true;
 }
 
 //  Round up to the nearest multiple of the group size
 //
-size_t RoundUp(int groupSize, int globalSize)   {
+size_t OpenCLUtilities::RoundUp(int groupSize, int globalSize)   {
     
     int r = globalSize % groupSize;
     if(r == 0)
@@ -279,29 +293,29 @@ size_t RoundUp(int groupSize, int globalSize)   {
     }
 }
 
-cl_mem LoadStackOfImages(cl_context context, char *fileName, int &width, int &height, int &depth, cl_image_format &format)
+cl_mem OpenCLUtilities::LoadStackOfImages(cl_context context, char *fileName, int &width, int &height, int &depth, cl_image_format &format)
 { 
-    generateListOfAssociatedFiles(fileName);
+    fileHandler->generateListOfAssociatedFiles(fileName);
 
-    depth = numberOfFiles();
+    depth = fileHandler->numberOfFiles();
     
     uint8*bigBuffer;
     bool firstRun = true;
     
     //load all images into a buffer
-    for (int i = 0; i < numberOfFiles(); i++) {
-        read_png_file(getNextFileName());
-        width = getImageWidth();
-        height = getImageLength();
-        uint8 *buffer = new uint8[getImageSize()];
-        memcpy(buffer, getImage(), getImageSize());
+    for (int i = 0; i < fileHandler->numberOfFiles(); i++) {
+        rgbaUtilities->read_png_file(fileHandler->getNextFileName());
+        width = rgbaUtilities->getImageWidth();
+        height = rgbaUtilities->getImageLength();
+        uint8 *buffer = new uint8[rgbaUtilities->getImageSize()];
+        memcpy(buffer, rgbaUtilities->getImage(), rgbaUtilities->getImageSize());
         if (firstRun) {
             //if its the first run we don't know the dimensions of the image
             //and thus don't know how much memory to statically allocate
-            bigBuffer = new uint8[getImageSize()*depth];
+            bigBuffer = new uint8[rgbaUtilities->getImageSize()*depth];
             firstRun = false;
         }
-        memcpy(bigBuffer+(i*getImageSize()), buffer, getImageSize());
+        memcpy(bigBuffer+(i*rgbaUtilities->getImageSize()), buffer, rgbaUtilities->getImageSize());
     } 
     
     //printImage(bigBuffer, getImageSize()*depth);
@@ -325,7 +339,7 @@ cl_mem LoadStackOfImages(cl_context context, char *fileName, int &width, int &he
                               width,
                               height,
                               depth,
-                              getImageRowPitch(),
+                              rgbaUtilities->getImageRowPitch(),
                               getImageSlicePitch(),
                               bigBuffer, 
                               &errNum);
@@ -338,7 +352,23 @@ cl_mem LoadStackOfImages(cl_context context, char *fileName, int &width, int &he
     return clImage; 
 }
 
-size_t getImageSlicePitch(){
-    return getImageRowPitch()*getImageLength();
+size_t OpenCLUtilities::getImageHeight(void){
+    return rgbaUtilities->getImageHeight();
+}
+
+size_t OpenCLUtilities::getImageWidth(void){
+    return rgbaUtilities->getImageWidth();
+}
+
+size_t OpenCLUtilities::getImageSize(void){
+    return rgbaUtilities->getImageSize();
+}
+
+size_t OpenCLUtilities::getImageRowPitch(void){
+    return rgbaUtilities->getImageRowPitch();
+}
+
+size_t OpenCLUtilities::getImageSlicePitch(void){
+    return rgbaUtilities->getImageRowPitch()*rgbaUtilities->getImageLength();
 }
 

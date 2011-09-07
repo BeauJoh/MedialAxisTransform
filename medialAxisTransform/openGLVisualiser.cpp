@@ -29,9 +29,7 @@ int cameraZDegrees = 0;
 float colour[4] = {1.0f,1.0f,0.75f,0.25};
 float clearcolour[4] = {1.0f,1.0f,1.0f,1.0f};
 
-//#define RAYCASTING
-//#define MARCHING_CUBES
-#define PLANE_PLOT
+
 
 //uncomment this and try to get it raycasting with 3D texture data
 #ifdef RAYCASTING
@@ -354,7 +352,7 @@ void resize(int w, int h){
     glMatrixMode(GL_MODELVIEW);//?
 }
 
-void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){    
+void StoreDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){    
     __imageWidth = imageWidth;
     __imageHeight = imageHeight;
     __imageDepth = imageDepth;
@@ -610,7 +608,7 @@ void displayUsability(void){
 
 }
 
-void mouseClick(int button, int state, int x, int y){
+void MouseClick(int button, int state, int x, int y){
 	if (button==GLUT_LEFT && state==GLUT_DOWN) {
         //on mouse click toggle paused
         std::cout << "mouse clicked at " << x << " and " << y << std::endl;
@@ -659,10 +657,10 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
     
     initgl(dataSet, imageWidth, imageHeight, imageDepth);
     
-    glutMouseFunc(&mouseClick);
+    glutMouseFunc(&MouseClick);
     glutKeyboardFunc(input);
 	glutDisplayFunc(DisplayGL);
-	//glutIdleFunc(update);
+	//glutIdleFunc(Update);
 	glutMainLoop();
 }
 
@@ -711,7 +709,7 @@ void LoadTexture(unsigned char * data, int depth)
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, __imageWidth, __imageHeight, 0, GL_RGBA,              GL_UNSIGNED_BYTE, __dataSet);
 }
 
-void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){    
+void StoreDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth){    
     __imageWidth = imageWidth;
     __imageHeight = imageHeight;
     __imageDepth = imageDepth;
@@ -731,7 +729,7 @@ void storeDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int 
     return;
 }
 
-void displayUsability(void){
+void DisplayUsability(void){
     std::cout << "Welcome to the volume render. To navigate the volume:" << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
@@ -797,27 +795,27 @@ void Init(void)
     
     glMatrixMode(GL_MODELVIEW);
     
-    displayUsability();
+    DisplayUsability();
     
 	glLoadIdentity();
 }
 
-void glutPrint(float x, float y, float z, void * font, char* text, float r, float g, float b, float a) 
-{ 
-    if(!text || !strlen(text)) return; 
-    bool blending = false; 
-    if(glIsEnabled(GL_BLEND)) blending = true; 
-    glEnable(GL_BLEND); 
-    glColor3f(r,g,b); 
-	glRasterPos3d(x, y, z);
-    while (*text) { 
-        glutBitmapCharacter(font, *text); 
-        text++; 
-    } 
-    if(!blending) glDisable(GL_BLEND);	
-}  
+//void glutPrint(float x, float y, float z, void * font, char* text, float r, float g, float b, float a) 
+//{ 
+//    if(!text || !strlen(text)) return; 
+//    bool blending = false; 
+//    if(glIsEnabled(GL_BLEND)) blending = true; 
+//    glEnable(GL_BLEND); 
+//    glColor3f(r,g,b); 
+//	glRasterPos3d(x, y, z);
+//    while (*text) { 
+//        glutBitmapCharacter(font, *text); 
+//        text++; 
+//    } 
+//    if(!blending) glDisable(GL_BLEND);	
+//}  
 
-void display(void)
+void Display(void)
 {	
     glShadeModel(GL_FLAT);
     
@@ -855,14 +853,14 @@ void display(void)
 	glutSwapBuffers();
 }
 
-void mouseClick(int button, int state, int x, int y){
+void MouseClick(int button, int state, int x, int y){
 	if (button==GLUT_LEFT && state==GLUT_DOWN) {
         //on mouse click toggle paused
         std::cout << "mouse clicked at " << x << " and " << y << std::endl;
 	}
 }
 
-void input(unsigned char character, int xx, int yy) {
+void Input(unsigned char character, int xx, int yy) {
 	switch(character) {
             //case ' ' : changePaused(); break; 
 		case 27  : exit(0); break;
@@ -894,28 +892,28 @@ void input(unsigned char character, int xx, int yy) {
 	}
 }
 
-void increaseRotation(void){
+void IncreaseRotation(void){
 	degrees += 0.25;
 	if (degrees > 360) {
 		degrees -= 360;
 	}
 }
 
-void wait(float seconds)
+void Wait(float seconds)
 {
-	clock_t endwait;
-	endwait = clock_t(clock () + seconds * CLOCKS_PER_SEC);
-	while (clock() < endwait) {}
+	clock_t endWait;
+	endWait = clock_t(clock () + seconds * CLOCKS_PER_SEC);
+	while (clock() < endWait) {}
 }
 
-void update(void)
+void Update(void)
 {	
-    // Wait and update the clock
+    // Wait and Update the clock
 	clock_t clocks_elapsed = clock() - clock_ticks; 
 	if ((float) clocks_elapsed < (float) CLOCKS_PER_SEC / (float) FRAMES_PER_SEC)
-		wait(((float)CLOCKS_PER_SEC / (float) FRAMES_PER_SEC - (float) clocks_elapsed)/(float) CLOCKS_PER_SEC);
+		Wait(((float)CLOCKS_PER_SEC / (float) FRAMES_PER_SEC - (float) clocks_elapsed)/(float) CLOCKS_PER_SEC);
 	//clock_ticks = clock();
-	//increaseRotation();
+	//IncreaseRotation();
     
     //move data plot?
     
@@ -933,12 +931,12 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
     
     Init();
 
-    storeDataSet(dataSet, imageWidth, imageHeight, imageDepth);
+    StoreDataSet(dataSet, imageWidth, imageHeight, imageDepth);
     
-    glutMouseFunc(&mouseClick);
-    glutKeyboardFunc(input);
-	glutDisplayFunc(display);
-	glutIdleFunc(update);
+    glutMouseFunc(&MouseClick);
+    glutKeyboardFunc(Input);
+	glutDisplayFunc(Display);
+	glutIdleFunc(Update);
 	glutMainLoop();
 }
 

@@ -13,7 +13,9 @@
 
 #include "RGBAUtilities.h"
 
-void abort_(const char * s, ...)
+
+
+void RGBAUtilities::abort_(const char * s, ...)
 {
     va_list args;
     va_start(args, s);
@@ -23,21 +25,15 @@ void abort_(const char * s, ...)
     abort();
 }
 
-int x, y;
+RGBAUtilities::RGBAUtilities(){
+    
+}
 
-int imageWidth, imageHeight;
-png_byte color_type;
-png_byte bit_depth;
+RGBAUtilities::~RGBAUtilities(){
+    
+}
 
-png_structp png_ptr;
-png_infop info_ptr;
-int number_of_passes;
-png_bytep * row_pointers;
-
-uint32 _imageLength, _imageWidth, _config, _bitsPerSample, _samplesPerPixel, _bitsPerPixel, _imageBitSize, _imageSize;
-uint64 _linebytes;
-
-void read_png_file(char* file_name)
+void RGBAUtilities::read_png_file(char* file_name)
 {
     char header[8];    // 8 is the maximum size that can be checked
     
@@ -51,61 +47,60 @@ void read_png_file(char* file_name)
 //    
     
     /* initialize stuff */
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     
-    if (!png_ptr)
+    if (!pngPtr)
         abort_("[read_png_file] png_create_read_struct failed");
     
-    info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr)
+    infoPtr = png_create_info_struct(pngPtr);
+    if (!infoPtr)
         abort_("[read_png_file] png_create_info_struct failed");
     
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(pngPtr)))
         abort_("[read_png_file] Error during init_io");
     
-    png_init_io(png_ptr, fp);
-    png_set_sig_bytes(png_ptr, 8);
+    png_init_io(pngPtr, fp);
+    png_set_sig_bytes(pngPtr, 8);
     
-    png_read_info(png_ptr, info_ptr);
+    png_read_info(pngPtr, infoPtr);
     
-    imageWidth = png_get_image_width(png_ptr, info_ptr);
-    imageHeight = png_get_image_height(png_ptr, info_ptr);
-    color_type = png_get_color_type(png_ptr, info_ptr);
-    bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+    imageWidth = png_get_image_width(pngPtr, infoPtr);
+    imageLength = png_get_image_height(pngPtr, infoPtr);
+    config = png_get_color_type(pngPtr, infoPtr);
+    bitsPerSample = png_get_bit_depth(pngPtr, infoPtr); // = 8 bits
         
-    number_of_passes = png_set_interlace_handling(png_ptr);
-    png_read_update_info(png_ptr, info_ptr);
+    numberOfPasses = png_set_interlace_handling(pngPtr);
+    png_read_update_info(pngPtr, infoPtr);
     
-    _imageWidth = png_get_image_width(png_ptr, info_ptr);
-    _imageLength = png_get_image_height(png_ptr, info_ptr);
-    _config = png_get_color_type(png_ptr, info_ptr);
-    _bitsPerSample = png_get_bit_depth(png_ptr, info_ptr); // = 8 bits
-    _samplesPerPixel = png_get_channels(png_ptr, info_ptr); // = 4 bytes
+    imageWidth = png_get_image_width(pngPtr, infoPtr);
+    imageLength = png_get_image_height(pngPtr, infoPtr);
 
-    _bitsPerPixel = _samplesPerPixel*_bitsPerSample;
-    _linebytes = _samplesPerPixel * _imageWidth; // = 640
-    //_linebytes = png_get_rowbytes(png_ptr, info_ptr); = 640
-    _imageBitSize = (sizeof(uint8) * _imageWidth * _imageLength * _samplesPerPixel);
-    _imageSize = _imageWidth * _imageLength * _samplesPerPixel;
-    //printf("linebytes = %i, expected %i\n",_linebytes,png_get_rowbytes(png_ptr, info_ptr));
-    //printf("Image Height is %d", sizeof(png_bytep) * imageHeight);
+    samplesPerPixel = png_get_channels(pngPtr, infoPtr); // = 4 bytes
+
+    bitsPerPixel = samplesPerPixel*bitsPerSample;
+    linebytes = samplesPerPixel * imageWidth; // = 640
+    //linebytes = png_get_rowbytes(pngPtr, infoPtr); = 640
+    imageBitSize = (sizeof(uint8) * imageWidth * imageLength * samplesPerPixel);
+    imageSize = imageWidth * imageLength * samplesPerPixel;
+    //printf("linebytes = %i, expected %i\n",linebytes,png_get_rowbytes(pngPtr, infoPtr));
+    //printf("Image Height is %d", sizeof(png_bytep) * imageLength);
 
     
     /* read file */
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(pngPtr)))
         abort_("[read_png_file] Error during read_image");
     
-    row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * imageHeight);
-    for (y=0; y<imageHeight; y++)
-        row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+    rowPointers = (png_bytep*) malloc(sizeof(png_bytep) * imageLength);
+    for (y=0; y<imageLength; y++)
+        rowPointers[y] = (png_byte*) malloc(png_get_rowbytes(pngPtr,infoPtr));
     
-    png_read_image(png_ptr, row_pointers);
+    png_read_image(pngPtr, rowPointers);
     
     fclose(fp);
 }
 
 
-void write_png_file(char* file_name)
+void RGBAUtilities::write_png_file(char* file_name)
 {
     /* create file */
     FILE *fp = fopen(file_name, "wb");
@@ -114,67 +109,67 @@ void write_png_file(char* file_name)
     
     
     /* initialize stuff */
-    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     
-    if (!png_ptr)
+    if (!pngPtr)
         abort_("[write_png_file] png_create_write_struct failed");
     
-    info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr)
+    infoPtr = png_create_info_struct(pngPtr);
+    if (!infoPtr)
         abort_("[write_png_file] png_create_info_struct failed");
     
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(pngPtr)))
         abort_("[write_png_file] Error during init_io");
     
-    png_init_io(png_ptr, fp);
+    png_init_io(pngPtr, fp);
     
     
     /* write header */
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(pngPtr)))
         abort_("[write_png_file] Error during writing header");
     
-    png_set_IHDR(png_ptr, info_ptr, imageWidth, imageHeight,
-                 bit_depth, color_type, PNG_INTERLACE_NONE,
+    png_set_IHDR(pngPtr, infoPtr, imageWidth, imageLength,
+                 bitsPerSample, config, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
     
-    png_write_info(png_ptr, info_ptr);
+    png_write_info(pngPtr, infoPtr);
     
     
     /* write bytes */
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(pngPtr)))
         abort_("[write_png_file] Error during writing bytes");
     
-    png_write_image(png_ptr, row_pointers);
+    png_write_image(pngPtr, rowPointers);
     
     
     /* end write */
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(pngPtr)))
         abort_("[write_png_file] Error during end of write");
     
-    png_write_end(png_ptr, NULL);
+    png_write_end(pngPtr, NULL);
         
     fclose(fp);
 }
 
-void cleanup(void){
+void RGBAUtilities::cleanup(void){
     /* cleanup heap allocation */
-    for (y=0; y<imageHeight; y++)
-        free(row_pointers[y]);
-    free(row_pointers);
+    for (y=0; y<imageLength; y++)
+        free(rowPointers[y]);
+    free(rowPointers);
 }
 
-void process_file(void)
+void RGBAUtilities::process_file(void)
 {
-    if (png_get_color_type(png_ptr, info_ptr) == PNG_COLOR_TYPE_RGB)
+    if (png_get_color_type(pngPtr, infoPtr) == PNG_COLOR_TYPE_RGB)
         abort_("[process_file] input file is PNG_COLOR_TYPE_RGB but must be PNG_COLOR_TYPE_RGBA "
                "(lacks the alpha channel)");
     
-    if (png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_RGBA)
+    if (png_get_color_type(pngPtr, infoPtr) != PNG_COLOR_TYPE_RGBA)
         abort_("[process_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (%d) (is %d)",
-               PNG_COLOR_TYPE_RGBA, png_get_color_type(png_ptr, info_ptr));
+               PNG_COLOR_TYPE_RGBA, png_get_color_type(pngPtr, infoPtr));
     
-    for (y=0; y<imageHeight; y++) {
-        png_byte* row = row_pointers[y];
+    for (y=0; y<imageLength; y++) {
+        png_byte* row = rowPointers[y];
         for (x=0; x<imageWidth; x++) {
             png_byte* ptr = &(row[x*4]);
             //printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
@@ -187,32 +182,32 @@ void process_file(void)
     }
 }
 
-float* normalizeImage(uint8* input){
+float* RGBAUtilities::normalizeImage(uint8* input){
     //with 8 bits this obvously causes a rounding error, usually down to 0, solve this by storing as floats
-    float* output = new float[_imageSize];
+    float* output = new float[imageSize];
     
-    for (int i = 0; i < _imageSize; i++) {
+    for (int i = 0; i < imageSize; i++) {
         output[i] = ((float)input[i]/255.0f);
     }
     delete input;
     return output;
 }
 
-uint8* denormalizeImage(float*input){
+uint8* RGBAUtilities::denormalizeImage(float*input){
     //with 8 bits this obvously causes a rounding error, usually down to 0, solve this by storing as floats
-    uint8* output = new uint8[_imageSize];
-    for (int i = 0; i < _imageSize; i++) {
+    uint8* output = new uint8[imageSize];
+    for (int i = 0; i < imageSize; i++) {
         output[i] = ((uint8)input[i]*255.0f);
     }
     delete input;
     return output;
 }
 
-bool allPixelsAreNormal(uint8* image){
+bool RGBAUtilities::allPixelsAreNormal(uint8* image){
     #ifdef DEBUG
-    printf("bits per sample is %i", _bitsPerSample);
+    printf("bits per sample is %i", bitsPerSample);
     #endif
-    for (int i = 0; i < _imageSize; i++) {
+    for (int i = 0; i < imageSize; i++) {
         if (image[i] > 1) {
             #ifdef DEBUG
             printf("Not normal at point %i with %d", i, image[i]);
@@ -223,15 +218,15 @@ bool allPixelsAreNormal(uint8* image){
     return true;
 }
 
-uint8* convolutedGetImage(void){
-    uint8* image = new uint8[(sizeof(uint8) * imageHeight)];
+uint8* RGBAUtilities::convolutedGetImage(void){
+    uint8* image = new uint8[(sizeof(uint8) * imageLength)];
 
-    if (png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_RGBA)
+    if (png_get_color_type(pngPtr, infoPtr) != PNG_COLOR_TYPE_RGBA)
         abort_("[process_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (%d) (is %d)",
-                PNG_COLOR_TYPE_RGBA, png_get_color_type(png_ptr, info_ptr));
+                PNG_COLOR_TYPE_RGBA, png_get_color_type(pngPtr, infoPtr));
     
-    for (y=0; y<imageHeight; y++) {
-        uint8* row = row_pointers[y];
+    for (y=0; y<imageLength; y++) {
+        uint8* row = rowPointers[y];
 
         for (x=0; x<imageWidth; x++) {
             uint8* ptr = &(row[x*4]);
@@ -242,17 +237,17 @@ uint8* convolutedGetImage(void){
     return image;
 }
 
-uint8* getImage(void){
-    uint8* image = new uint8[(sizeof(uint8) * _imageWidth * _imageLength * _samplesPerPixel)];
-    for (y=0; y < _imageLength; y++) {
-        uint8* row = row_pointers[y];
+uint8* RGBAUtilities::getImage(void){
+    uint8* image = new uint8[(sizeof(uint8) * imageWidth * imageLength * samplesPerPixel)];
+    for (y=0; y < imageLength; y++) {
+        uint8* row = rowPointers[y];
         int origX = 0;
-        for (x=0; x < _linebytes; x+=4) {
+        for (x=0; x < linebytes; x+=4) {
             uint8* ptr = &(row[origX*4]);
-            image[y*_linebytes + x + 0] = ptr[0];
-            image[y*_linebytes + x + 1] = ptr[1];
-            image[y*_linebytes + x + 2] = ptr[2];
-            image[y*_linebytes + x + 3] = ptr[3];
+            image[y*linebytes + x + 0] = ptr[0];
+            image[y*linebytes + x + 1] = ptr[1];
+            image[y*linebytes + x + 2] = ptr[2];
+            image[y*linebytes + x + 3] = ptr[3];
             origX++;
         }
     }
@@ -260,9 +255,9 @@ uint8* getImage(void){
     return image;
 }
 
-void convolutedSetImage(uint8* image){
-    for (y=0; y<imageHeight; y++) {
-        uint8* row = row_pointers[y];
+void RGBAUtilities::convolutedSetImage(uint8* image){
+    for (y=0; y<imageLength; y++) {
+        uint8* row = rowPointers[y];
         for (x=0; x<imageWidth; x++) {
             uint8* ptr = &(row[x*4]);
             *ptr = image[y*imageWidth + x];
@@ -272,11 +267,11 @@ void convolutedSetImage(uint8* image){
     delete image;
 }
 
-void clearImageBuffer(){
-    for (y=0; y<_imageLength; y++) {
-        uint8* row = row_pointers[y];
+void RGBAUtilities::clearImageBuffer(){
+    for (y=0; y<imageLength; y++) {
+        uint8* row = rowPointers[y];
         int origX = 0;
-        for (x=0; x<_linebytes; x+=4) {
+        for (x=0; x<linebytes; x+=4) {
             uint8* ptr = &(row[origX*4]);
             ptr[0] = 0;
             ptr[1] = 0;
@@ -287,17 +282,17 @@ void clearImageBuffer(){
     }
 }
 
-void setImage(uint8* image){
+void RGBAUtilities::setImage(uint8* image){
     
-    for (y=0; y < _imageLength; y++) {
-        uint8* row = row_pointers[y];
+    for (y=0; y < imageLength; y++) {
+        uint8* row = rowPointers[y];
         int origX = 0;
-        for (x=0; x < _linebytes; x+=4) {
+        for (x=0; x < linebytes; x+=4) {
             uint8* ptr = &(row[origX*4]);
-            ptr[0] = image[y*_linebytes + x + 0];
-            ptr[1] = image[y*_linebytes + x + 1];
-            ptr[2] = image[y*_linebytes + x + 2];
-            ptr[3] = image[y*_linebytes + x + 3];
+            ptr[0] = image[y*linebytes + x + 0];
+            ptr[1] = image[y*linebytes + x + 1];
+            ptr[2] = image[y*linebytes + x + 2];
+            ptr[3] = image[y*linebytes + x + 3];
             origX++;
         }
     }
@@ -305,7 +300,7 @@ void setImage(uint8* image){
     delete image;
 }
 
-float* norm(float* input, uint32 imageSize){
+float* RGBAUtilities::norm(float* input, uint32 imageSize){
     float* output = new float[imageSize];
     
     for (int i = 0; i < imageSize; i++) {
@@ -314,7 +309,7 @@ float* norm(float* input, uint32 imageSize){
     return output;
 }
 
-float* denorm(float* input, uint32 imageSize){
+float* RGBAUtilities::denorm(float* input, uint32 imageSize){
     float* output = new float[imageSize];
     
     for (int i = 0; i < imageSize; i++) {
@@ -323,7 +318,7 @@ float* denorm(float* input, uint32 imageSize){
     return output;
 }
 
-float* upcastToFloat(uint8* input, uint32 imageSize){
+float* RGBAUtilities::upcastToFloat(uint8* input, uint32 imageSize){
     float* output = new float[imageSize];
     for (int i = 0; i < imageSize; i++) {
         output[i] = (float)input[i];
@@ -331,7 +326,7 @@ float* upcastToFloat(uint8* input, uint32 imageSize){
     return output;
 }
 
-float* upcastToFloatAndNormalize(uint8* input, uint32 imageSize){
+float* RGBAUtilities::upcastToFloatAndNormalize(uint8* input, uint32 imageSize){
     float* output = new float[imageSize];
     for (int i = 0; i < imageSize; i++) {
         output[i] = ((float)input[i])/255.0f;
@@ -339,7 +334,7 @@ float* upcastToFloatAndNormalize(uint8* input, uint32 imageSize){
     return output;
 }
 
-uint8* downcastToByteAndDenormalize(float* input, uint32 imageSize){
+uint8* RGBAUtilities::downcastToByteAndDenormalize(float* input, uint32 imageSize){
     uint8* output = new uint8[imageSize];
     for (int i = 0; i < imageSize; i++) {
         output[i] = input[i]*255.0f;
@@ -347,7 +342,7 @@ uint8* downcastToByteAndDenormalize(float* input, uint32 imageSize){
     return output;
 }
 
-uint8* downCastToByte(float* input, uint32 imageSize){
+uint8* RGBAUtilities::downCastToByte(float* input, uint32 imageSize){
     uint8* output = new uint8[imageSize];
     for (int i = 0; i < imageSize; i++) {
         output[i] = (uint8)input[i];
@@ -355,7 +350,7 @@ uint8* downCastToByte(float* input, uint32 imageSize){
     return output;
 }
 
-void imageStatistics(uint8 * input, uint32 imageSize){
+void RGBAUtilities::imageStatistics(uint8 * input, uint32 imageSize){
     float mean = 0;
     
     for (int i = 0; i < imageSize; i++) {
@@ -365,23 +360,18 @@ void imageStatistics(uint8 * input, uint32 imageSize){
     printf("Image has mean value %f\n", mean/imageSize);
 }
 
-void printImageSpecs(){
-    printf("color_type = %d\n", color_type);
-    printf("bit_depth = %d\n", bit_depth);
-    printf("number_of_passes = %d\n", number_of_passes);
+void RGBAUtilities::printImageSpecs(void){
+    printf("color type = %d\n", config);
+    printf("bits per sample = %d\n", bitsPerSample);
+    printf("number of passes = %d\n", numberOfPasses);
 }
 
-void printImage(uint8 * input, uint32 imageSize){    
+void RGBAUtilities::printImage(uint8 * input, uint32 imageSize){    
     for (int i = 0; i < imageSize; i++) {
         printf("Value at %i: %hhu\n", i ,input[i]);
     }
 }
 
-union FloatAndByte
-{
-    float   f;
-    uint8   c[0];
-};
 
 //Example Usage:
 //uint8* tmpVals = new uint8[4];
@@ -397,7 +387,7 @@ union FloatAndByte
 //moreTmpVals = demultToBytes(result, 4);
 //printf("float value is : %i\n", moreTmpVals[0]);
 
-float* multiplexToFloat(uint8* data, int imageSize){
+float* RGBAUtilities::multiplexToFloat(uint8* data, int imageSize){
     
     float* resultingValues = new float[imageSize];
     
@@ -416,7 +406,7 @@ float* multiplexToFloat(uint8* data, int imageSize){
     return resultingValues;
 }
 
-uint8* demultToBytes(float* data, int imageSize){
+uint8* RGBAUtilities::demultToBytes(float* data, int imageSize){
     
     uint8* resultingValues = new uint8[imageSize];
     
@@ -435,41 +425,40 @@ uint8* demultToBytes(float* data, int imageSize){
     return resultingValues;
 }
 
-void initializeRedTileRowPtr(void){
-    row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * imageHeight);
-    for (y=0; y<imageHeight; y++){
-        row_pointers[y] = (png_byte*) malloc(imageWidth*4);
+void RGBAUtilities::initializeRedTileRowPtr(void){
+    rowPointers = (png_bytep*) malloc(sizeof(png_bytep) * imageLength);
+    for (y=0; y<imageLength; y++){
+        rowPointers[y] = (png_byte*) malloc(imageWidth*4);
     }
 }
 
-uint8* createBlackTile(void){
+uint8* RGBAUtilities::createBlackTile(void){
 
     uint8* image = new uint8[10*10*4];
     imageWidth = 10;
-    imageHeight = 10;
+    imageLength = 10;
     
     initializeRedTileRowPtr();
 
-    color_type = 6;
-    bit_depth = 8; 
-    number_of_passes = 1;
+    config = 6;
+    bitsPerSample = 8; 
+    numberOfPasses = 1;
     
-    _imageWidth = imageWidth;
-    _imageLength = imageHeight;
+    imageWidth = imageWidth;
+    imageLength = imageLength;
 
-    _bitsPerSample = bit_depth; // = 8 bits
-    _samplesPerPixel = 4; // = 4 bytes
+    bitsPerSample = bitsPerSample; // = 8 bits
+    samplesPerPixel = 4; // = 4 bytes
     
-    _bitsPerPixel = _samplesPerPixel*_bitsPerSample;
-    _linebytes = _samplesPerPixel * _imageWidth; // = 640
-    _config = color_type;
+    bitsPerPixel = samplesPerPixel*bitsPerSample;
+    linebytes = samplesPerPixel * imageWidth; // = 640
     
-    _bitsPerPixel = _samplesPerPixel*_bitsPerSample;
-    _linebytes = _samplesPerPixel * _imageWidth; // = 640
-    //_linebytes = png_get_rowbytes(png_ptr, info_ptr); = 640
-    _imageBitSize = (sizeof(uint8) * _imageWidth * _imageLength * _samplesPerPixel);
-    _imageSize = _imageWidth * _imageLength * _samplesPerPixel;
-    //printf("linebytes = %i, expected %i\n",_linebytes,png_get_ro
+    bitsPerPixel = samplesPerPixel*bitsPerSample;
+    linebytes = samplesPerPixel * imageWidth; // = 640
+    //linebytes = png_get_rowbytes(pngPtr, infoPtr); = 640
+    imageBitSize = (sizeof(uint8) * imageWidth * imageLength * samplesPerPixel);
+    imageSize = imageWidth * imageLength * samplesPerPixel;
+    //printf("linebytes = %i, expected %i\n",linebytes,png_get_ro
     
     
     for (int y = 0; y<10; y++) {
@@ -483,39 +472,39 @@ uint8* createBlackTile(void){
     return image;
 }
 
-uint32 getImageSize(void){
-    return _imageSize;
+uint32 RGBAUtilities::getImageSize(void){
+    return imageSize;
 }
 
-uint32 getImageSizeInFloats(void){
-    return _imageSize*sizeof(float);
+uint32 RGBAUtilities::getImageSizeInFloats(void){
+    return imageSize*sizeof(float);
 }
 
-uint32 getImageLength(void){
-    return _imageLength;
+uint32 RGBAUtilities::getImageLength(void){
+    return imageLength;
 };
 
-uint32 getImageHeight(void){
-    return _imageLength;
+uint32 RGBAUtilities::getImageHeight(void){
+    return imageLength;
 };
 
-uint32 getImageWidth(void){
-    return _imageWidth;
+uint32 RGBAUtilities::getImageWidth(void){
+    return imageWidth;
 };
 
-uint32 getConfig(void){
-    return _config;
+uint32 RGBAUtilities::getConfig(void){
+    return config;
 };
 
-uint32 getBitsPerSample(void){
-    return _bitsPerSample;
+uint32 RGBAUtilities::getBitsPerSample(void){
+    return bitsPerSample;
 };
 
-uint32 getSamplesPerPixel(void){
-    return _samplesPerPixel;
+uint32 RGBAUtilities::getSamplesPerPixel(void){
+    return samplesPerPixel;
 };
 
-uint32 getImageRowPitch(void){
-    return _samplesPerPixel * _imageWidth;
+uint32 RGBAUtilities::getImageRowPitch(void){
+    return samplesPerPixel * imageWidth;
 };
 

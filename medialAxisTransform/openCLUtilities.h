@@ -22,17 +22,15 @@
 #include "FileHandler.h"
 
 
-// Special automatic include statement, 
 // openCL is dependent on specific libraries, depending on the OS
 #if defined (__APPLE__)  && defined (__MACH__)
-//macOSX openCL Framework
-#include <OpenCL/opencl.h>
+    //macOSX openCL Framework
+    #include <OpenCL/opencl.h>
 #else
-//it must be for Tukey
-//linux openCL Library
-//#include <CL/oclUtils.h>
-#include <CL/opencl.h>
-//#include <tiff.h>
+    //it must be for a LinuxBox
+    //linux openCL Library
+    //#include <CL/oclUtils.h>
+    #include <CL/opencl.h>
 #endif
 
 #define FATAL(msg)\
@@ -45,20 +43,36 @@ assert(0); \
 #define DST 2
 #define byte unsigned char
 
+class OpenCLUtilities //Sample Class for the C++ Tutorial 
+{
+private:
+    FileHandler *fileHandler;
+    RGBAUtilities *rgbaUtilities;
+    
+public: 
+    OpenCLUtilities();
+    ~OpenCLUtilities();
+    char *print_cl_errstring(cl_int err);
+    cl_bool there_was_an_error(cl_int err);
+    void getGPUUnitSupportedImageFormats(cl_context context);
+    cl_bool doesGPUSupportImageObjects(cl_device_id device_id);
+    char *load_program_source(const char *filename);
+    cl_bool cleanupAndKill();
+    cl_mem LoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format);
+    cl_mem LoadStackOfImages(cl_context context, char *fileName, int &width, int &height, int &depth, cl_image_format &format);
+    
+    bool SaveImage(char *fileName, uint8 *buffer, int width, int height);
+    cl_mem FreeImageLoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format);
+    bool FreeImageSaveImage(char *fileName, char *buffer, int width, int height);
+    size_t RoundUp(int groupSize, int globalSize);
+    size_t getImageHeight();
+    size_t getImageWidth();
+    size_t getImageSize();
+    size_t getImageRowPitch();
+    size_t getImageSlicePitch();
+};
 
-char *print_cl_errstring(cl_int err);
-cl_bool there_was_an_error(cl_int err);
-void getGPUUnitSupportedImageFormats(cl_context context);
-cl_bool doesGPUSupportImageObjects(cl_device_id device_id);
-char *load_program_source(const char *filename);
-cl_bool cleanupAndKill();
-cl_mem LoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format);
-cl_mem LoadStackOfImages(cl_context context, char *fileName, int &width, int &height, int &depth, cl_image_format &format);
 
-bool SaveImage(char *fileName, uint8 *buffer, int width, int height);
-cl_mem FreeImageLoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format);
-bool FreeImageSaveImage(char *fileName, char *buffer, int width, int height);
-size_t RoundUp(int groupSize, int globalSize);
-size_t getImageSlicePitch();
+
 
 #endif

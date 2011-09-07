@@ -1,6 +1,5 @@
-
+#include "global.h"
 #include "openCLUtilities.h"
-#include "RGBAUtilities.h"
 #include "openGLVisualiser.h"
 
 #include <getopt.h>
@@ -104,6 +103,15 @@ static inline int parseCommandLine(int argc , char** argv){
     return 1;
 };
 
+OpenCLUtilities* openCLUtilities;
+
+void createClassObjects(void){
+    openCLUtilities = new OpenCLUtilities();
+}
+
+void destroyClassObjects(void){
+    delete openCLUtilities;
+}
 
 void cleanKill(int errNumber){
     clReleaseMemObject(input);
@@ -113,6 +121,8 @@ void cleanKill(int errNumber){
 	clReleaseKernel(kernel);
 	clReleaseCommandQueue(commands);
 	clReleaseContext(context);
+    
+    destroyClassObjects();
     exit(errNumber);
 }
 
@@ -120,6 +130,8 @@ int main(int argc, char *argv[])
 {	
     parseCommandLine(argc , argv);
 
+    createClassObjects();
+    
 	// Connect to a compute device
 	//
 	gpu = 1;
@@ -145,7 +157,7 @@ int main(int argc, char *argv[])
     // Load kernel source code
     //
     //	char *source = load_program_source((char*)"sobel_opt1.cl");
-    char *source = load_program_source((char*)kernelFileName.c_str());
+    char *source = openCLUtilities->load_program_source((char*)kernelFileName.c_str());
     if(!source)
     {
         cout << "Error: Failed to load compute program from file!" << endl;
@@ -172,7 +184,7 @@ int main(int argc, char *argv[])
         cleanKill(EXIT_FAILURE);
 	}
     
-    if(!doesGPUSupportImageObjects){
+    if(!openCLUtilities->doesGPUSupportImageObjects(device_id)){
         cleanKill(EXIT_FAILURE);
     }
 	
@@ -200,7 +212,7 @@ int main(int argc, char *argv[])
     cl_image_format format; 
 
     //  create input image buffer object to read results from
-    input = LoadStackOfImages(context, (char*)imageFileName.c_str(), width, height, depth, format);
+    input = openCLUtilities->LoadStackOfImages(context, (char*)imageFileName.c_str(), width, height, depth, format);
     
     //  create output buffer object, to store results
     output = clCreateImage3D(context, 
@@ -209,12 +221,12 @@ int main(int argc, char *argv[])
                              width, 
                              height,
                              depth,
-                             getImageRowPitch(), 
-                             getImageSlicePitch(),
+                             openCLUtilities->getImageRowPitch(), 
+                             openCLUtilities->getImageSlicePitch(),
                              NULL, 
                              &err);
 
-    if(there_was_an_error(err)){
+    if(openCLUtilities->there_was_an_error(err)){
         cout << "Output Image Buffer creation error!" << endl;
         cleanKill(EXIT_FAILURE);
     }    
@@ -234,7 +246,7 @@ int main(int argc, char *argv[])
                               CL_FILTER_NEAREST, 
                               &err);
     
-    if(there_was_an_error(err)){
+    if(openCLUtilities->there_was_an_error(err)){
         cout << "Error creating CL sampler object." << endl;
         cleanKill(EXIT_FAILURE);
     }
@@ -250,7 +262,7 @@ int main(int argc, char *argv[])
     err |= clSetKernelArg(kernel, 5, sizeof(cl_int), &depth);
     //depth arg here!
     
-    if(there_was_an_error(err)){
+    if(openCLUtilities->there_was_an_error(err)){
         cout << "Error: Failed to set kernel arguments! " << err << endl;
         cleanKill(EXIT_FAILURE);
     }    
@@ -271,20 +283,21 @@ int main(int argc, char *argv[])
     //cout << "max work item sizes" << CL_DEVICE_MAX_WORK_ITEM_SIZES << endl;
     //cout << "max workgroup size is : " << CL_DEVICE_MAX_WORK_GROUP_SIZE << endl;
     cout << "max kernel size is : " << CL_KERNEL_WORK_GROUP_SIZE << endl;
-    size_t localWorksize[3] = {16, 16, 16};
+    size_t localWorksize[3] = {16, 16, 0};
     
     //cout << "Image Width " << getImageWidth() << endl;
     //cout << "Scaled Image Width " << RoundUp((int)localWorksize[0], getImageWidth()) << endl;
     
-    size_t globalWorksize[3] =  {getImageWidth(), getImageHeight(), depth};
+    size_t globalWorksize[3] =  {width, height, depth};
     
     //  Start up the kernels in the GPUs
     //
-	err = clEnqueueNDRangeKernel(commands, kernel, 3, NULL, globalWorksize, NULL, NULL, NULL, NULL);
-    
-	if (there_was_an_error(err))
+
+	err = clEnqueueNDRangeKernel(commands, kernel, 3, localWorksize, globalWorksize, NULL, NULL, NULL, NULL);
+
+	if (openCLUtilities->there_was_an_error(err))
 	{
-        cout << print_cl_errstring(err) << endl;
+        cout << openCLUtilities->print_cl_errstring(err) << endl;
 		cout << "Failed to execute kernel!, " << err << endl;
         cleanKill(EXIT_FAILURE);
 	}
@@ -295,7 +308,7 @@ int main(int argc, char *argv[])
     
 	// Read back the results from the device to verify the output
 	//
-    uint8* bigBuffer = new uint8[getImageSize()*depth];        
+    uint8* bigBuffer = new uint8[openCLUtilities->getImageSize()*depth];        
     
     size_t origin[3] = { 0, 0, 0 };
     size_t region[3] = { width, height, depth};
@@ -309,15 +322,15 @@ int main(int argc, char *argv[])
     // Read image to buffer with implicit row pitch calculation
     //
     err = clEnqueueReadImage(queue, output,
-                             CL_TRUE, origin, region, getImageRowPitch(), getImageSlicePitch(), bigBuffer, 0, NULL, NULL);
+                             CL_TRUE, origin, region, openCLUtilities->getImageRowPitch(), openCLUtilities->getImageSlicePitch(), bigBuffer, 0, NULL, NULL);
     
     
     //printImage(buffer, getImageSize()*depth);
         
     //load all images into a buffer
     for (int i = 0; i < depth; i++) {
-        uint8 *buffer = new uint8[getImageSize()];
-        memcpy(buffer, bigBuffer+(i*getImageSize()), getImageSize());
+        uint8 *buffer = new uint8[openCLUtilities->getImageSize()];
+        memcpy(buffer, bigBuffer+(i*openCLUtilities->getImageSize()), openCLUtilities->getImageSize());
         
         string file = outputImageFileName.substr(outputImageFileName.find_last_of('/')+1);
         string path = outputImageFileName.substr(0, outputImageFileName.find_last_of('/')+1);
@@ -337,7 +350,7 @@ int main(int argc, char *argv[])
         //cout << newName << endl;
 
         
-        SaveImage((char*)newName.c_str(), buffer, width, height);   
+        openCLUtilities->SaveImage((char*)newName.c_str(), buffer, width, height);   
 //        if (i == 1) {
 //            printImage(buffer, getImageSize());
 //        }
@@ -347,11 +360,10 @@ int main(int argc, char *argv[])
 
 
     } 
-    cleanup();
     
     cout << "RUN FINISHED SUCCESSFULLY!" << endl;
     
-    plotMain(argc, argv, bigBuffer, getImageWidth(), getImageHeight(), depth);
+    plotMain(argc, argv, bigBuffer, width, height, depth);
 
     
     // Shutdown and cleanup

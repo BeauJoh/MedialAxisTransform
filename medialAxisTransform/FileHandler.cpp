@@ -8,25 +8,15 @@
 
 #include "FileHandler.h"
 
-using namespace std;
-
-/* hidden private variables */
-vector<string> files;
-string * orderedFiles;
-int traverser;
-string path;
-
-template <class T> bool from_string(T& t, 
-                                    const std::string& s, 
-                                    std::ios_base& (*f)(std::ios_base&))
-{
-    std::istringstream iss(s);
-    return !(iss >> f >> t).fail();
+FileHandler::FileHandler(){
+    
 }
 
+FileHandler::~FileHandler(){
+    
+}
 
-
-int getdir (string dir, string ext, vector<string> &files)
+int FileHandler::getdir (string dir, string ext, vector<string> &files)
 {
     DIR *dp;
     struct dirent *dirp;
@@ -45,7 +35,7 @@ int getdir (string dir, string ext, vector<string> &files)
     return 0;
 }
 
-int getFilesInDirectoryWithName (string dir, string name, vector<string> &files)
+int FileHandler::getFilesInDirectoryWithName (string dir, string name, vector<string> &files)
 {
     DIR *dp;
     struct dirent *dirp;
@@ -63,7 +53,7 @@ int getFilesInDirectoryWithName (string dir, string name, vector<string> &files)
     return 0;
 }
 
-void generateListOfAssociatedFiles(char* filename)  
+void FileHandler::generateListOfAssociatedFiles(char* filename)  
 {
     
     string handedInString = filename;
@@ -98,8 +88,8 @@ void generateListOfAssociatedFiles(char* filename)
 }
 
 
-string remove(string str, string substr){
-	for( int i = str.find(substr,0); i != string::npos; i=str.find(substr,i) )
+string FileHandler::remove(string str, string substr){
+	for( int i = (int)str.find(substr,0); i != string::npos; i=(int)str.find(substr,i) )
     {
 		str.erase( i,substr.length() );
 		++i;
@@ -107,7 +97,7 @@ string remove(string str, string substr){
 	return str;
 }
 
-bool doesNumberingStartAt0(string name, string ext){
+bool FileHandler::doesNumberingStartAt0(string name, string ext){
     int lowest = numberOfFiles();
     
     for (int j=0; j < numberOfFiles(); j++) {
@@ -131,7 +121,7 @@ bool doesNumberingStartAt0(string name, string ext){
     }
 }
 
-bool doesNumberingStartAt1(string name, string ext){
+bool FileHandler::doesNumberingStartAt1(string name, string ext){
     int lowest = numberOfFiles();
     
     for (int j=0; j < numberOfFiles(); j++) {
@@ -155,7 +145,7 @@ bool doesNumberingStartAt1(string name, string ext){
     }
 }
 
-bool noFilesAreMissing(string name, string ext){
+bool FileHandler::noFilesAreMissing(string name, string ext){
     int lowest = numberOfFiles();
     int highest = 0;
     vector<int> tempVec = vector<int>();
@@ -199,7 +189,7 @@ bool noFilesAreMissing(string name, string ext){
     return true;
 }
 
-void sortFilesNumerically(string name, string ext){
+void FileHandler::sortFilesNumerically(string name, string ext){
     
     if (!doesNumberingStartAt1(name, ext)&&!doesNumberingStartAt0(name, ext)){
         cout << "Error, numbering for image stack doesn't start at 0 or 1" << endl;
@@ -233,7 +223,7 @@ void sortFilesNumerically(string name, string ext){
     }
 }
 
-void printFiles(void){
+void FileHandler::printFiles(void){
     for (unsigned int i = 0;i < files.size();i++) {
         //        cout << files[i] << endl;
         cout << orderedFiles[i] << endl;
@@ -241,19 +231,19 @@ void printFiles(void){
     return;
 }
 
-char* getNextFileName(void){
+char* FileHandler::getNextFileName(void){
     traverser ++;
     //    return (char*)(path+files[traverser-1]).c_str();
     return (char*)(path+orderedFiles[traverser-1]).c_str();
 }
 
-bool areFilesLeft(void){
+bool FileHandler::areFilesLeft(void){
     if (traverser < files.size()+1) {
         return true;
     }
     return false;
 }
 
-int numberOfFiles(void){
+int FileHandler::numberOfFiles(void){
     return (int)files.size();
 }

@@ -41,43 +41,74 @@
     #include <png.h>
 #endif
 
-void abort_(const char * s, ...);
-void read_png_file(char* file_name);
-void write_png_file(char* file_name);
-//an example on how to access pixel components of the file
-void process_file(void);
-//normalizing/denormalizing and testing normalization only works with the getImage/setImage functions and even then cannot currently be used due to rounding
-float* normalizeImage(uint8*);
-uint8* denormalizeImage(float*);
-bool allPixelsAreNormal(uint8*);
+class RGBAUtilities {
+    
+private:
+    //private variables
+    
+    int x, y;
+    png_structp pngPtr;
+    png_infop infoPtr;
+    int numberOfPasses;
+    png_bytep * rowPointers;
+    uint32 imageLength, imageWidth, config, bitsPerSample, samplesPerPixel, bitsPerPixel, imageBitSize, imageSize;
+    uint64 linebytes;
+    
+    union FloatAndByte
+    {
+        float   f;
+        uint8   c[0];
+    };
+    
+    //private functions
+    void abort_(const char * s, ...);
+    void initializeRedTileRowPtr(void);
+    void printImageSpecs(void);
+    void convolutedSetImage(uint8* image);
+    uint8* convolutedGetImage(void);
 
-uint8* getImage(void);
-void setImage(uint8*);
-void setImageFromFloat(uint8* image);
-void clearImageBuffer();
 
-float* norm(float* input, uint32 imageSize);
-float* denorm(float* input, uint32 imageSize);
-float* upcastToFloat(uint8* input, uint32 imageSize);
-uint8* downCastToByte(float* input, uint32 imageSize);
-float* upcastToFloatAndNormalize(uint8* input, uint32 imageSize);
-uint8* downcastToByteAndDenormalize(float* input, uint32 imageSize);
-float* multiplexToFloat(uint8* data, int imageSize);
-uint8* demultToBytes(float* data, int imageSize);
+public:
+    RGBAUtilities();
+    ~RGBAUtilities();
+    void read_png_file(char* file_name);
+    void write_png_file(char* file_name);
+    //an example on how to access pixel components of the file
+    void process_file(void);
+    //normalizing/denormalizing and testing normalization only works with the getImage/setImage functions and even then cannot currently be used due to rounding
+    float* normalizeImage(uint8*);
+    uint8* denormalizeImage(float*);
+    bool allPixelsAreNormal(uint8*);
+    
+    uint8* getImage(void);
+    void setImage(uint8*);
+    void setImageFromFloat(uint8* image);
+    void clearImageBuffer();
+    
+    float* norm(float* input, uint32 imageSize);
+    float* denorm(float* input, uint32 imageSize);
+    float* upcastToFloat(uint8* input, uint32 imageSize);
+    uint8* downCastToByte(float* input, uint32 imageSize);
+    float* upcastToFloatAndNormalize(uint8* input, uint32 imageSize);
+    uint8* downcastToByteAndDenormalize(float* input, uint32 imageSize);
+    float* multiplexToFloat(uint8* data, int imageSize);
+    uint8* demultToBytes(float* data, int imageSize);
+    
+    uint32 getImageSizeInFloats(void);
+    uint32 getImageLength(void);
+    uint32 getImageHeight(void);
+    uint32 getImageWidth(void);
+    uint32 getConfig(void);
+    uint32 getBitsPerSample(void);
+    uint32 getSamplesPerPixel(void);
+    uint32 getImageRowPitch(void);
+    uint32 getImageSize(void);
+    
+    uint8* createBlackTile(void);
+    void imageStatistics(uint8 * input, uint32 imageSize);
+    void printImage(uint8 * input, uint32 imageSize);
+    void cleanup(void);
+};
 
-uint32 getImageSizeInFloats(void);
-uint32 getImageLength(void);
-uint32 getImageHeight(void);
-uint32 getImageWidth(void);
-uint32 getConfig(void);
-uint32 getBitsPerSample(void);
-uint32 getSamplesPerPixel(void);
-uint32 getImageRowPitch(void);
-uint32 getImageSize(void);
-
-uint8* createBlackTile(void);
-void imageStatistics(uint8 * input, uint32 imageSize);
-void printImage(uint8 * input, uint32 imageSize);
-void cleanup(void);
 #endif
 
