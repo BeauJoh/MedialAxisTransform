@@ -29,7 +29,10 @@ int cameraZDegrees = 0;
 float colour[4] = {1.0f,1.0f,0.75f,0.25};
 float clearcolour[4] = {1.0f,1.0f,1.0f,1.0f};
 
-#define RAYCASTING
+//#define RAYCASTING
+//#define MARCHING_CUBES
+#define PLANE_PLOT
+
 //uncomment this and try to get it raycasting with 3D texture data
 #ifdef RAYCASTING
 const float kDefaultDistance = 2.25;
@@ -663,10 +666,15 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
 	glutMainLoop();
 }
 
-#else
+#endif
+
+#ifdef MARCHING_CUBES
 
 
 
+#endif
+
+#ifdef PLANE_PLOT
 // this is the safe ugly option currently
 
 GLuint * textures;
