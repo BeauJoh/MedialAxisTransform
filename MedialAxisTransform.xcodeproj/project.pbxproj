@@ -17,6 +17,8 @@
 		8B3FBAC7140E0EFB007972BB /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B3FBAC6140E0EFB007972BB /* GLUT.framework */; };
 		8BB5BC12140C526200FAF0AF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB5BC11140C526200FAF0AF /* main.cpp */; };
 		8BB5BC14140C526200FAF0AF /* MedialAxisTransform.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */; };
+		8BE17CA71417BD44002DEE83 /* marchingcubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BE17CA31417BD44002DEE83 /* marchingcubes.cpp */; };
+		8BE17CA81417BD44002DEE83 /* vec3f.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BE17CA51417BD44002DEE83 /* vec3f.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +52,10 @@
 		8BB5BC0D140C526200FAF0AF /* MedialAxisTransform */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MedialAxisTransform; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BB5BC11140C526200FAF0AF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = MedialAxisTransform.1; sourceTree = "<group>"; };
+		8BE17CA31417BD44002DEE83 /* marchingcubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = marchingcubes.cpp; sourceTree = "<group>"; };
+		8BE17CA41417BD44002DEE83 /* marchingcubes.h */ = {isa = PBXFileReference; fileEncoding = 4; path = marchingcubes.h; sourceTree = "<group>"; };
+		8BE17CA51417BD44002DEE83 /* vec3f.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vec3f.cpp; sourceTree = "<group>"; };
+		8BE17CA61417BD44002DEE83 /* vec3f.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec3f.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +106,10 @@
 				8B19F5C7140C535A001A1693 /* RGBAUtilities.cpp */,
 				8B3FBAC0140E0E50007972BB /* openGLVisualiser.h */,
 				8B3FBABE140E0E3F007972BB /* openGLVisualiser.cpp */,
+				8BE17CA31417BD44002DEE83 /* marchingcubes.cpp */,
+				8BE17CA41417BD44002DEE83 /* marchingcubes.h */,
+				8BE17CA51417BD44002DEE83 /* vec3f.cpp */,
+				8BE17CA61417BD44002DEE83 /* vec3f.h */,
 				8B19F5D1140C5405001A1693 /* my_kernel.cl */,
 				8BB5BC13140C526200FAF0AF /* MedialAxisTransform.1 */,
 			);
@@ -161,6 +171,8 @@
 				8B19F5CA140C535A001A1693 /* openCLUtilities.cpp in Sources */,
 				8B19F5CB140C535A001A1693 /* RGBAUtilities.cpp in Sources */,
 				8B3FBABF140E0E3F007972BB /* openGLVisualiser.cpp in Sources */,
+				8BE17CA71417BD44002DEE83 /* marchingcubes.cpp in Sources */,
+				8BE17CA81417BD44002DEE83 /* vec3f.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

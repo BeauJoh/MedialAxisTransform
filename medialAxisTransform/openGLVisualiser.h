@@ -31,9 +31,25 @@
 void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);
 
 //#define RAYCASTING
-//#define MARCHING_CUBES
-#define PLANE_PLOT
+#define MARCHING_CUBES_GOOD
+//#define MARCHING_CUBES_BAD
+//#define PLANE_PLOT
 
+#ifdef RAYCASTING
+
+#endif
+#ifdef MARCHING_CUBES
+    void LoadTexture(unsigned char * data, int depth);
+    void StoreDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);   
+    void DisplayUsability(void);
+    void Init(void);
+    void Display(void);
+    void MouseClick(int button, int state, int x, int y);
+    void Input(unsigned char character, int xx, int yy);
+    void IncreaseRotation(void);
+    void Wait(float seconds);
+    void Update(void);
+#endif
 #ifdef PLANE_PLOT
     void LoadTexture(unsigned char * data, int depth);
     void StoreDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);   
