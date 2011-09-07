@@ -261,7 +261,7 @@ void thresholdAndCopy(__read_only image3d_t srcImg,
                     thisIn = read_imagef(srcImg, sampler, (int4)(x, y, z, 1));
                     
                     if(thisIn.x > 0.05 || thisIn.y > 0.05 || thisIn.z > 0.05){
-                        write_imagef(dstImg, outImageCoord, getFillColour());
+                        write_imagef(dstImg, outImageCoord, thisIn);
                     }
                 }
             }

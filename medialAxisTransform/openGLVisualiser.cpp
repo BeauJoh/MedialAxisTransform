@@ -29,12 +29,8 @@ int cameraZDegrees = 0;
 float colour[4] = {1.0f,1.0f,0.75f,0.25};
 float clearcolour[4] = {1.0f,1.0f,1.0f,1.0f};
 
-#define PLOT_PLANE
-//#define RAYCASTING
-//#define MARCHING_VOXELS
-
+#define RAYCASTING
 //uncomment this and try to get it raycasting with 3D texture data
-
 #ifdef RAYCASTING
 const float kDefaultDistance = 2.25;
 const float kMaxDistance = 40;
@@ -54,7 +50,6 @@ float edgeThresh = 0.05;
 float edgeExp = 0.5;
 float DitherRay = 1.0;
 float boundExp = 0.0;    //Contribution of boundary enhancement calculated opacity and scaling exponent
-
 int WINDOW_WIDTH,WINDOW_HEIGHT;
 GLuint TransferTexture,gradientTexture3D,intensityTexture3D,finalImage,renderBuffer, frameBuffer,backFaceBuffer, glslprogram;
 
@@ -146,11 +141,12 @@ char* CheckForErrors(GLhandleARB glObject){
     
     glGetObjectParameterivARB(glObject, GL_OBJECT_INFO_LOG_LENGTH_ARB, &blen);
     if (blen > 1){
-        InfoLog = new char[blen*sizeof(int)];
-        glGetInfoLogARB(glObject, blen, &slen, InfoLog);
-
-        return InfoLog;
-        //delete InfoLog;
+        //        InfoLog = malloc(blen*sizeof(int));
+        //        glGetInfoLogARB(glObject, blen, slen, InfoLog);
+        //
+        //        Result:= PAnsiChar(InfoLog);
+        //        Dispose(InfoLog);
+        std::cout << "Something bad happened!" << std::endl;
     }
 }
 
@@ -252,16 +248,18 @@ int initShaderWithFile(std::string vertname, std::string fragname) {
     int result = 0;
     Vcompiled = 0;
     Fcompiled = 0;
-    
-    
     fname = fragname;
     vname = vertname;
-    
-    my_vertex_shader_source = LoadStr( vname);
-    my_fragment_shader_source = LoadStr( fname);
-
-    
-    
+    if (!fileexists(fname)){
+        fname = extractfilepath(fname);
+        vname = vertname;
+    }
+    if (!fileexists(vname)){
+        vname = extractfilepath(vname);
+    }
+    if ((!(fileexists(fname))) || (!(fileexists(vname)))) {
+        std::cout << "Unable to find GLSL shaders " << fname << " " << vname << std::endl;
+    }
     
 //    char** tmpArray = new char*[1];
 //    tmpArray[0] = (char*)my_fragment_shader_source.c_str();
@@ -270,29 +268,22 @@ int initShaderWithFile(std::string vertname, std::string fragname) {
 //    
 //    loadshader((char*)fname.c_str(), (GLchar**)tmpArray);
 //    loadshader((char*)vname.c_str(), (GLchar**)tmpArray2);
-    //char* tmp = (char*)my_fragment_shader_source.c_str();
-    //char* tmp2 = (char*)my_vertex_shader_source.c_str();
-    //loadshader((char*)fname.c_str(), &tmp);
-    //loadshader((char*)vname.c_str(), &tmp2);
-    
+
+    //loadshader((char*)fname.c_str(), (GLchar**)my_fragment_shader_source.c_str());
+    //loadshader((char*)vname.c_str(), (GLchar**)my_vertex_shader_source.c_str());
+    my_fragment_shader_source = LoadStr( fname);
+    my_vertex_shader_source = LoadStr( vname);
     my_program = glCreateProgramObjectARB();
     my_vertex_shader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
     my_fragment_shader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
-
     // Load Shader Sources
-//    FShaderLength = (int)my_fragment_shader_source.length();
-//    VShaderLength = (int)my_vertex_shader_source.length();
-//    const char * tmp1 = (const char *)my_vertex_shader_source.c_str();
-//    const char * tmp2 = (const char *)my_fragment_shader_source.c_str();
+    FShaderLength = (int)my_fragment_shader_source.length();
+    VShaderLength = (int)my_vertex_shader_source.length();
+    const char * tmp1 = (const char *)my_vertex_shader_source.c_str();
+    const char * tmp2 = (const char *)my_fragment_shader_source.c_str();
 
-//    const char* tmpConst = (const char *)tmp;
-//    const char* tmp2Const = (const char *)tmp2;
-    
-    const char* tmpConst = (const char *)my_fragment_shader_source.c_str();
-    const char* tmp2Const = (const char *)my_vertex_shader_source.c_str();
-    
-    glShaderSourceARB(my_vertex_shader, 1, &tmpConst, NULL);
-    glShaderSourceARB(my_fragment_shader, 1, &tmp2Const, NULL);
+    glShaderSourceARB(my_vertex_shader, 1, &tmp1, NULL);
+    glShaderSourceARB(my_fragment_shader, 1, &tmp2, NULL);
     // Compile The Shaders
     glCompileShaderARB(my_vertex_shader);
     glGetObjectParameterivARB(my_vertex_shader,GL_OBJECT_COMPILE_STATUS_ARB, &Vcompiled);
@@ -303,14 +294,13 @@ int initShaderWithFile(std::string vertname, std::string fragname) {
     glAttachObjectARB(my_program, my_fragment_shader);
     // Link The Program Object
     glLinkProgramARB(my_program);
-    
-    //******* fragment shader not compiling! ******//
-    if ((Vcompiled!=1) || (Fcompiled!=1)){ 
-        char* lErrors="";
-        lErrors = CheckForErrors(my_program);
-        if (lErrors!=""){
-            std::cout << "GLSL shader error " << lErrors << std::endl;
-        }
+    if ((Vcompiled!=1) || (Fcompiled!=1)){
+        //        lErrors := CheckForErrors(my_program);
+        //        if lErrors <> '' then
+        //            showDebug('GLSL shader error '+lErrors);
+        //        end;
+        //        result := my_program ;
+        std::cout << "shader has errors!" << std::endl;
     }
     
     //result = my_program
@@ -584,7 +574,6 @@ void DisplayGL(void){
     renderBackFace();
     rayCasting();
     disableRenderBuffers();
-    drawUnitQuad();
     renderBufferToScreen();
     //next, you will need to execute SwapBuffers
 }
@@ -670,19 +659,11 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
     glutMouseFunc(&mouseClick);
     glutKeyboardFunc(input);
 	glutDisplayFunc(DisplayGL);
-	glutIdleFunc(DisplayGL);
+	//glutIdleFunc(update);
 	glutMainLoop();
 }
-#endif
 
-#ifdef MARCHING_VOXELS
-
-
-
-
-#endif
-
-#ifdef PLOT_PLANE
+#else
 
 
 
@@ -765,8 +746,8 @@ void displayUsability(void){
     std::cout << "Quit"<< std::endl;
     std::cout << "\t\t\t\t\tQ" << std::endl;
     std::cout << "\t\t\t\t\tEsc" << std::endl;
-
-
+    
+    
 }
 
 void Init(void)
@@ -774,8 +755,8 @@ void Init(void)
     glEnable(GL_TEXTURE_2D);
     //glEnable(GL_DEPTH_TEST);
     
-    glClearColor(0, 0.5, 1, 1);
-
+    glClearColor(clearcolour[0], clearcolour[1], clearcolour[2], clearcolour[3]);
+    
     //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     //glClearColor(1.0, 1.0, 1.0, 1.0);
 	//glColor4d(0.0, 0.0, 0.0, 1.0);
@@ -783,11 +764,11 @@ void Init(void)
     
     glShadeModel(GL_SMOOTH);
     
-//    glEnable (GL_STENCIL_TEST);
-//    glStencilFunc (GL_ALWAYS, 0x1, 0x1);
-//    glStencilFunc (GL_EQUAL, 0x0, 0x1);
-//    
-
+    //    glEnable (GL_STENCIL_TEST);
+    //    glStencilFunc (GL_ALWAYS, 0x1, 0x1);
+    //    glStencilFunc (GL_EQUAL, 0x0, 0x1);
+    //    
+    
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
     gluPerspective(90, 3.0/3.0, 0.1, 100.0);
@@ -833,7 +814,7 @@ void display(void)
     glShadeModel(GL_FLAT);
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    	
+    
     glLoadIdentity();
     
     //glutPrint(0, 0, 1, GLUT_BITMAP_TIMES_ROMAN_24, "bananas", 1, 0.5, 0, 0.1);
@@ -842,15 +823,15 @@ void display(void)
     
     glRotatef(cameraXDegrees,1.0f,0.0f,0.0f);		// Rotate On The X Axis
     glRotatef(cameraYDegrees,0.0f,1.0f,0.0f);		// Rotate On The Y Axis
-
+    
 	glEnable(GL_TEXTURE_2D);
     // texture coordinates are always specified before the vertex they apply to.
     for (int i = 0; i < __imageDepth; i++) {
         
         glBindTexture(GL_TEXTURE_2D, textures[i]);   // choose the texture to use.
         
-        glColor4f(1, .5, 0, 1);
-
+        glColor4f(colour[0], colour[1], colour[2], colour[3]);
+        
         glBegin( GL_QUADS );
         glTexCoord2d(0.0,0.0); glVertex3d(0.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);
         glTexCoord2d(1.0,0.0); glVertex3d(1.0*sliceScalingFactor,0.0*sliceScalingFactor,i*sliceDepth);
