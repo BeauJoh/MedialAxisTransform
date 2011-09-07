@@ -347,24 +347,11 @@ int main(int argc, char *argv[])
         
         newName = path.append(newName);
         
-        //cout << newName << endl;
-
-        
         openCLUtilities->SaveImage((char*)newName.c_str(), buffer, width, height);   
-//        if (i == 1) {
-//            printImage(buffer, getImageSize());
-//        }
-        //clear buffer was originally used as a test to ensure new images 
-        //are being populated
-        //clearImageBuffer();
-
 
     } 
-    
-    cout << "RUN FINISHED SUCCESSFULLY!" << endl;
-    
+        
     plotMain(argc, argv, bigBuffer, width, height, depth);
-
     
     // Shutdown and cleanup
 	//
