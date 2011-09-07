@@ -215,7 +215,7 @@ void sobel(__read_only image3d_t srcImg,
 
 __kernel 
 //__attribute__((reqd_work_group_size(256, 256, 1)))
-void mrep(__read_only image3d_t srcImg,
+void thresholdAndCopy(__read_only image3d_t srcImg,
                     __write_only image3d_t dstImg,
                     sampler_t sampler,
                     int width, int height, int depth)
@@ -283,4 +283,41 @@ void mrep(__read_only image3d_t srcImg,
     }
     
 }
+
+__kernel 
+// kernel simply copies from input buffer to output
+void straightCopy(__read_only image3d_t srcImg,
+          __write_only image3d_t dstImg,
+          sampler_t sampler,
+          int width, int height, int depth)
+{
+    //w is ignored? I believe w is included as all data types are a power of 2
+    int4 startImageCoord = (int4) (get_global_id(0) - 1,
+                                   get_global_id(1) - 1,
+                                   get_global_id(2) - 1, 
+                                   1);
+    
+    int4 endImageCoord   = (int4) (get_global_id(0) + 1,
+                                   get_global_id(1) + 1, 
+                                   //removed plus 1 to get indexing proper
+                                   get_global_id(2)/* + 1*/, 
+                                   1);
+    
+    int4 outImageCoord = (int4) (get_global_id(0),
+                                 get_global_id(1),
+                                 get_global_id(2), 
+                                 1);
+    
+    if (outImageCoord.x < width && outImageCoord.y < height && outImageCoord.z < depth){
+        for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
+            for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
+                for(int x= startImageCoord.x; x <= endImageCoord.x; x++){
+                    write_imagef(dstImg, outImageCoord, read_imagef(srcImg, sampler, (int4)(x, y, z, 1)));
+                }
+            }
+        }
+    }
+    
+}
+
 

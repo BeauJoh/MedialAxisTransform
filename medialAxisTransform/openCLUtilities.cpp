@@ -214,34 +214,7 @@ cl_mem LoadImage(cl_context context, char *fileName, int &width, int &height, cl
     height = getImageLength();
     
     uint8 *buffer = new uint8[getImageSize()];    
-    
-    //
-    // As a Normalized float
-    //printImage((uint8*)upcastToFloatAndNormalize(getImage(), getImageSize()), getImageSize());
-    
-    //
-    // Done and Undone
-    // printImage(downcastToByteAndDenormalize(upcastToFloatAndNormalize(getImage(), getImageSize()), getImageSize()), getImageSize());
-
     memcpy(buffer, getImage(), getImageSize());
-
-//    memcpy(buffer, upcastToFloatAndNormalize(getImage(), getImageSize()), getImageSizeInFloats());
-
-    //
-    // With this buffer
-    //printImage(downcastToByteAndDenormalize((float*)buffer, getImageSizeInFloats()), getImageSize());
-    
-    //test with red sample image
-//    setImage(createRedTile());
-//    
-//    width=10;
-//    height=10;
-//    uint8*buffer = new uint8[10*10*4*sizeof(float)];
-//    memcpy(buffer, upcastToFloatAndNormalize(getImage(), 10*10), 10*10*4*sizeof(float));
-    
-    //end of test with sample image
-    
-    
     
     format.image_channel_order = CL_RGBA; 
     format.image_channel_data_type = CL_UNORM_INT8;
