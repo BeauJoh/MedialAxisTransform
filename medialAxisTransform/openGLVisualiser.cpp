@@ -952,3 +952,5 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
 	glutIdleFunc(update);
 	glutMainLoop();
 }
+
+#endif
