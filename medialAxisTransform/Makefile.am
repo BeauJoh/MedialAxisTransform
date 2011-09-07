@@ -17,7 +17,6 @@ noinst_HEADERS=\
 	RGBAUtilities.h\
 	openGLVisualiser.h
 
-MedialAxisTransform_LDADD= -lglut -lpng -lGL -lcl2module \
--lCLVMAMDilPlugin -lCLVMPTXPlugin -lcldcpuengine -lCLVMCPUPlugin -lcl2module -lGLU
+MedialAxisTransform_LDADD= -lglut -lpng -lGL -lOpenCL
 
 MedialAxisTransform_LDFLAGS= -L/usr/X11/lib

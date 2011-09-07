@@ -206,23 +206,22 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = gnu
-AM_CPPFLAGS = -framework GLUT -framework OpenGL -framework OpenCL -framework libpng -L/usr/X11/lib/
+AM_CPPFLAGS = -framework GLUT -framework OpenGL -framework OpenCL -framework libpng -L/usr/X11/lib
 MedialAxisTransform_SOURCES = \
-    main.cpp\
-    FileHandler.cpp\
-    openCLUtilities.cpp\
-    RGBAUtilities.cpp\
-    openGLVisualiser.cpp
+	main.cpp\
+	FileHandler.cpp\
+	openCLUtilities.cpp\
+	RGBAUtilities.cpp\
+	openGLVisualiser.cpp
 
 noinst_HEADERS = \
-    FileHander.h\
-    openCLUtilities.h\Ê
+	FileHander.h\
+	openCLUtilities.h\
+	RGBAUtilities.h\
+	openGLVisualiser.h
 
-MedialAxisTransform_LDADD = -lglut -lpng -lGL -lcl2module \
--lCLVMAMDilPlugin -lCLVMPTXPlugin -lcldcpuengine -lCLVMCPUPlugin -lcl2module\
--lGLU
-
-MedialAxisTransform_LDFLAGS = -L/usr/X11/lib/
+MedialAxisTransform_LDADD = -lglut -lpng -lGL -lOpenCL
+MedialAxisTransform_LDFLAGS = -L/usr/X11/lib
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -635,8 +634,6 @@ uninstall-am: uninstall-binPROGRAMS
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-binPROGRAMS
 
-    RGBAUtilities.h\
-    openGLVisualiser.h
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
