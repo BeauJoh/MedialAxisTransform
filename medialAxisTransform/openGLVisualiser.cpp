@@ -29,7 +29,7 @@ int cameraZDegrees = 0;
 float colour[4] = {1.0f,1.0f,0.75f,0.25};
 float clearcolour[4] = {1.0f,1.0f,1.0f,1.0f};
 
-#define RAYCASTING
+//#define RAYCASTING
 //uncomment this and try to get it raycasting with 3D texture data
 #ifdef RAYCASTING
 const float kDefaultDistance = 2.25;
