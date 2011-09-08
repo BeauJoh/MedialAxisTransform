@@ -1,15 +1,35 @@
-//
-//  RGBAUtilities.h
-//  RGBAUtilities
-//
-//  Initially created by Guillaume Cottenceau. 
-//  Copyright 2002-2010 Guillaume Cottenceau.
-//
-//  Modified by Beau Johnston on 13/07/11.
-//  Copyright 2011 Beau Johnston
-//  This software may be freely redistributed under the terms
-//  of the X11 license.
-//
+/*
+ *  RGBAUtilities.h
+ *  MedialAxisTransform
+ *
+ *
+ *  Created by Beau Johnston on 13/07/11.
+ *  Copyright (C) 2011 by Beau Johnston.
+ *
+ *  Please email me if you have any comments, suggestions or advice:
+ *                              beau@inbeta.org
+ *
+ *  read_png_file & write_png_file functionality, Guillaume Cottenceau, 2002-2010
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
 
 #ifndef RGBA_UTILS
 #define RGBA_UTILS
@@ -23,8 +43,8 @@
 
 #define PNG_DEBUG 3
 
-    //define our data types, the following numbers denote the number of bits
-    //e.g. int8 uses a signed 8 bit
+//define our data types, the following numbers denote the number of bits
+//e.g. int8 uses a signed 8 bit
 #define int8 signed char
 #define int16 signed short
 #define int32 signed int
@@ -71,10 +91,8 @@ private:
 public:
     RGBAUtilities();
     ~RGBAUtilities();
-    void read_png_file(char* file_name);
-    void write_png_file(char* file_name);
-    //an example on how to access pixel components of the file
-    void process_file(void);
+    void readPngFile(char* file_name);
+    void writePngFile(char* file_name);
     //normalizing/denormalizing and testing normalization only works with the getImage/setImage functions and even then cannot currently be used due to rounding
     float* normalizeImage(uint8*);
     uint8* denormalizeImage(float*);

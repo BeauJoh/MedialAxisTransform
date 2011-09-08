@@ -1,19 +1,37 @@
-//
-//  RGBAUtilities.cpp
-//  RGBAUtilities
-//
-//  Initially created by Guillaume Cottenceau. 
-//  Copyright 2002-2010 Guillaume Cottenceau.
-//
-//  Modified by Beau Johnston on 13/07/11.
-//  Copyright 2011 Beau Johnston
-//  This software may be freely redistributed under the terms
-//  of the X11 license.
-//
+/*
+ *  RGBAUtilities.cpp
+ *  MedialAxisTransform
+ *
+ *
+ *  Created by Beau Johnston on 13/07/11.
+ *  Copyright (C) 2011 by Beau Johnston.
+ *
+ *  Please email me if you have any comments, suggestions or advice:
+ *                              beau@inbeta.org
+ *
+ *  read_png_file & write_png_file functionality, Guillaume Cottenceau, 2002-2010
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
 
 #include "RGBAUtilities.h"
-
-
 
 void RGBAUtilities::abort_(const char * s, ...)
 {
@@ -33,7 +51,7 @@ RGBAUtilities::~RGBAUtilities(){
     
 }
 
-void RGBAUtilities::read_png_file(char* file_name)
+void RGBAUtilities::readPngFile(char* file_name)
 {
     char header[8];    // 8 is the maximum size that can be checked
     
@@ -100,7 +118,7 @@ void RGBAUtilities::read_png_file(char* file_name)
 }
 
 
-void RGBAUtilities::write_png_file(char* file_name)
+void RGBAUtilities::writePngFile(char* file_name)
 {
     /* create file */
     FILE *fp = fopen(file_name, "wb");
@@ -156,30 +174,6 @@ void RGBAUtilities::cleanup(void){
     for (y=0; y<imageLength; y++)
         free(rowPointers[y]);
     free(rowPointers);
-}
-
-void RGBAUtilities::process_file(void)
-{
-    if (png_get_color_type(pngPtr, infoPtr) == PNG_COLOR_TYPE_RGB)
-        abort_("[process_file] input file is PNG_COLOR_TYPE_RGB but must be PNG_COLOR_TYPE_RGBA "
-               "(lacks the alpha channel)");
-    
-    if (png_get_color_type(pngPtr, infoPtr) != PNG_COLOR_TYPE_RGBA)
-        abort_("[process_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (%d) (is %d)",
-               PNG_COLOR_TYPE_RGBA, png_get_color_type(pngPtr, infoPtr));
-    
-    for (y=0; y<imageLength; y++) {
-        png_byte* row = rowPointers[y];
-        for (x=0; x<imageWidth; x++) {
-            png_byte* ptr = &(row[x*4]);
-            //printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-            //       x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
-            
-            /* set red value to 0 and green value to the blue one */
-            ptr[0] = 0;
-            ptr[1] = ptr[2];
-        }
-    }
 }
 
 float* RGBAUtilities::normalizeImage(uint8* input){

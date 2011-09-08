@@ -1,10 +1,33 @@
-//
-//  openCLUtilities.c
-//  openCLImageLoad
-//
-//  Created by Beau Johnston on 17/06/11.
-//  Copyright 2011 University Of New England. All rights reserved.
-//
+/*
+ *  openGLVisualiser.cpp
+ *  MedialAxisTransform
+ *
+ *
+ *  Created by Beau Johnston on 17/06/11.
+ *  Copyright (C) 2011 by Beau Johnston.
+ *
+ *  Please email me if you have any comments, suggestions or advice:
+ *                              beau@inbeta.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
 
 #include "openCLUtilities.h"
 
@@ -222,7 +245,7 @@ char* OpenCLUtilities::load_program_source(const char *filename)
 
 cl_mem OpenCLUtilities::LoadImage(cl_context context, char *fileName, int &width, int &height, cl_image_format &format)
 { 
-    rgbaUtilities->read_png_file(fileName);
+    rgbaUtilities->readPngFile(fileName);
     
     width = rgbaUtilities->getImageWidth();
     height = rgbaUtilities->getImageLength();
@@ -273,7 +296,7 @@ bool OpenCLUtilities::SaveImage(char *fileName, uint8 *buffer, int width, int he
 
     //setImageFromFloat(downcastToByteAndDenormalize((float*)buffer, getImageSize()));
     
-    rgbaUtilities->write_png_file(fileName);
+    rgbaUtilities->writePngFile(fileName);
     
     return true;
 }
@@ -304,7 +327,7 @@ cl_mem OpenCLUtilities::LoadStackOfImages(cl_context context, char *fileName, in
     
     //load all images into a buffer
     for (int i = 0; i < fileHandler->numberOfFiles(); i++) {
-        rgbaUtilities->read_png_file(fileHandler->getNextFileName());
+        rgbaUtilities->readPngFile(fileHandler->getNextFileName());
         width = rgbaUtilities->getImageWidth();
         height = rgbaUtilities->getImageLength();
         uint8 *buffer = new uint8[rgbaUtilities->getImageSize()];

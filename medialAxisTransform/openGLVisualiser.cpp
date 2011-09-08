@@ -1,10 +1,33 @@
-//
-//  openGLVisualiser.cpp
-//  MedialAxisTransform
-//
-//  Created by Beau Johnston on 31/08/11.
-//  Copyright 2011 University Of New England. All rights reserved.
-//
+/*
+ *  openGLVisualiser.cpp
+ *  MedialAxisTransform
+ *
+ *
+ *  Created by Beau Johnston on 31/08/11. 
+ *  Copyright (C) 2011 by Beau Johnston.
+ *
+ *  Please email me if you have any comments, suggestions or advice:
+ *                              beau@inbeta.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
 
 #include "openGLVisualiser.h"
 
@@ -705,6 +728,8 @@ void MouseClick(int button, int state, int x, int y){
 	if (button==GLUT_LEFT && state==GLUT_DOWN) {
         //on mouse click toggle paused
         std::cout << "mouse clicked at " << x << " and " << y << std::endl;
+        cameraYDegrees = y;
+        cameraXDegrees = x;
 	}
 }
 
@@ -715,17 +740,17 @@ void Input(unsigned char character, int xx, int yy) {
             // q or esc to quit    
         case 113 : exit(0); break;
             //up
-        case 119 : cameraY-=1; break;
+        case 115 : cameraY+=5; break;
             //down
-        case 115 : cameraY +=1; break;
+        case 119 : cameraY -=5; break;
             //left
-        case 97 :  cameraX +=1; break;
+        case 100 :  cameraX -=5; break;
             //right
-        case 100 : cameraX -=1; break;
+        case 97 : cameraX +=5; break;
             //zoom in
-        case 114 : cameraZ +=1; break;
+        case 114 : cameraZ +=5; break;
             //zoom out
-        case 102 : cameraZ -=1; break;
+        case 102 : cameraZ -=5; break;
             
         case 106 : cameraYDegrees +=1; break;
             
@@ -742,15 +767,19 @@ void Input(unsigned char character, int xx, int yy) {
 
 void Display(void)
 {	
+    //move camera view
     glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    glRotatef(cameraXDegrees,1.0f,0.0f,0.0f);		// Rotate On The X Axis
-    glRotatef(cameraYDegrees,0.0f,1.0f,0.0f);		// Rotate On The Y Axis
-    cameraXDegrees = 0;
-    cameraYDegrees = 0;
+    
+    glTranslated(cameraX, cameraY, cameraZ);
+    cameraX = 0;
+    cameraY = 0;
+    cameraZ = 0;
+    
     glMatrixMode(GL_MODELVIEW);
     
-    glShadeModel(GL_FLAT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //glShadeModel(GL_FLAT);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
@@ -771,34 +800,38 @@ void Display(void)
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
     
-    // Set material properties which will be assigned by glColor
+    //Set material properties which will be assigned by glColor
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     float specReflection[] = { 0.8f, 0.8f, 0.8f, 1.0f };
     glMaterialfv(GL_FRONT, GL_SPECULAR, specReflection);
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+    //if you want to see lighting call this earlier
     glLoadIdentity();
     
-    glTranslated(cameraX, cameraY, cameraZ);
-    glTranslated(-__imageHeight/4, -__imageWidth/4, -20*__imageDepth);
-    glScalef(0.5, 0.5, 3.0);
-
+    glTranslated(-__imageHeight/2, -__imageWidth/2, -__imageDepth*8);
     //flip the embryo upside down and turn about face
     glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
     glRotatef(180, 0.0f, 1.0f, 0.0f);
     
+    //rotate the object into position
+    glRotatef(cameraXDegrees,1.0f,0.0f,0.0f);		// Rotate On The X Axis
+    glRotatef(cameraYDegrees,0.0f,1.0f,0.0f);		// Rotate On The Y Axis
+    
+    //stretch it depthwise so our foetus has some real volume
+    //glScalef(0.5, 0.5, 2.5);
+    //glColor4f(0.1, 0.5, 0.0f, 0.8);
+    
+    //draw foetus
     glPushMatrix(); 
     vector<vertex>::iterator it;
         glBegin(GL_TRIANGLES);
         for(it = vertices.begin(); it < vertices.end(); it++) {
             glNormal3d(it->normal_x, it->normal_y, it->normal_z);
-            // glVertex3d(it->x*25.f, it->y, it->z);
+                //scaling factor for z
             glVertex3d(it->x, it->y, it->z);
         }
         glEnd();
     glPopMatrix(); 
-    
     
     
     glutSwapBuffers(); 
@@ -837,8 +870,8 @@ void Init(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    
-    //glDepthFunc(GL_LEQUAL);
-    //glEnable(GL_DEPTH_TEST);    
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);    
     //glEnable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);
     glMatrixMode(GL_MODELVIEW);
@@ -878,7 +911,7 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
     
     StoreDataSet(dataSet, imageWidth, imageHeight, imageDepth);
     
-    vertices = runMarchingCubes(voxels, __imageWidth, __imageWidth, __imageDepth, 1, 3, 3, 64.0);
+    vertices = runMarchingCubes(voxels, __imageWidth, __imageWidth, __imageDepth, 1, 1, 1, 32.0);
     
     glutMouseFunc(&MouseClick);
     glutKeyboardFunc(Input);
@@ -1046,6 +1079,7 @@ void Display(void)
     
     glPushMatrix(); 
     glTranslatef(-0.5, -0.5, -0.5);
+    glScalef(0.01, 0.01, 0.01);
     glBegin(GL_TRIANGLES);
         vMarchingCubes();
     glEnd();
@@ -1293,7 +1327,7 @@ GLfloat fSample3(GLfloat fX, GLfloat fY, GLfloat fZ)
 
 GLfloat fSample4(GLfloat fX, GLfloat fY, GLfloat fZ)
 {    
-    return __dataSet[(int)fZ*__imageHeight*__imageWidth + (int)fY*__imageWidth + (int)fX];
+    return __dataSet[4*(((int)fZ*__imageHeight*__imageWidth) + ((int)fY*__imageWidth) + (int)fX)];
     //return (6.0*fX - 3.0)*sin(6.0*fY - 3.0) + sin(pow(0.5*fZ - 2.0, 3.0));
 }
 
