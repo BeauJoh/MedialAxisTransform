@@ -51,16 +51,12 @@
 #include <fstream>
 #include <iostream>
 
-void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);
-
-//#define RAYCASTING
-#define MARCHING_CUBES_GOOD
-//#define MARCHING_CUBES_BAD
+//uncomment required def to change visualiser
+#define MARCHING_CUBES
 //#define PLANE_PLOT
+//#define RAYCASTING
 
-#ifdef RAYCASTING
 
-#endif
 #ifdef MARCHING_CUBES
     void LoadTexture(unsigned char * data, int depth);
     void StoreDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);   
@@ -72,7 +68,9 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
     void IncreaseRotation(void);
     void Wait(float seconds);
     void Update(void);
+    void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);
 #endif
+
 #ifdef PLANE_PLOT
     void LoadTexture(unsigned char * data, int depth);
     void StoreDataSet(unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);   
@@ -84,6 +82,11 @@ void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, i
     void IncreaseRotation(void);
     void Wait(float seconds);
     void Update(void);
+    void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);
+#endif
+
+#ifdef RAYCASTING
+    void plotMain(int argc, char ** argv, unsigned char * dataSet, int imageWidth, int imageHeight, int imageDepth);
 #endif
 
 #endif

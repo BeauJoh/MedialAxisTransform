@@ -380,7 +380,6 @@ int main(int argc, char *argv[])
         openCLUtilities->SaveImage((char*)newName.c_str(), buffer, width, height);   
 
     } 
-        
     plotMain(argc, argv, bigBuffer, width, height, depth);
     
     // Shutdown and cleanup

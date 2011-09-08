@@ -2,7 +2,7 @@
  *  MarchingCubes.h
  *  MedialAxisTransform
  *
- *  Initially created by Evan Travers. 
+ *  Initially created by Erik Smistad. 
  *
  *  Modified by Beau Johnston on 07/09/11.
  *  Copyright (C) 2011 by Beau Johnston.
@@ -30,14 +30,17 @@
  */
 
 
-#ifndef MARCHING_CUBES
-#define MARCHING_CUBES
+#ifndef MARCHING_CUBES_DEF
+#define MARCHING_CUBES_DEF
+
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <vector>
 using namespace std;
+
 typedef unsigned char uchar;
+
 struct vertex {
 	double x, y, z, normal_x, normal_y, normal_z;
 };

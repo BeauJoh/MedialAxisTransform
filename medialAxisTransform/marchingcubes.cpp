@@ -2,7 +2,7 @@
  *  MarchingCubes.cpp
  *  MedialAxisTransform
  *
- *  Initially created by Evan Travers. 
+ *  Initially created by Erik Smistad. 
  *
  *  Modified by Beau Johnston on 07/09/11.
  *  Copyright (C) 2011 by Beau Johnston.
@@ -28,6 +28,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 
 #include <cmath>
 #include "marchingcubes.h"
@@ -166,7 +167,3 @@ vector<vertex> runMarchingCubes(double ***voxels, int sizeX, int sizeY, int size
 	return vertexList;
 }
 
-/**
- * Author: Erik Smistad
- * www.thebigblob.com
- **/
