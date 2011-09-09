@@ -23,3 +23,5 @@ MedialAxisTransform.xcodeproj/project.xcworkspace/xcuserdata/beau.xcuserdatad/Us
 /medialAxisTransform/Makefile.in
 /medialAxisTransform/MedialAxisTransform
 /build
+*.tar.gz
+configure
