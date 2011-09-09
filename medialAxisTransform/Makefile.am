@@ -16,4 +16,10 @@ noinst_HEADERS=\
 	RGBAUtilities.h\
 	openGLVisualiser.h
 
+#if defined (__APPLE__)  && defined (__MACH__)
 MedialAxisTransform_LDFLAGS= -L/usr/X11/lib -L/System/Library/Frameworks/OpenCL.framework/Libraries -framework GLUT -framework OpenGL -framework OpenCL -framework libpng
+#else
+MedialAxisTransform_LDFLAGS= -lGLUT -lOpenGL -lOpenCL -lpng
+#endif
+
+
