@@ -1,387 +1,0 @@
-TMedialAxisTransform
-v3
-r1
-cCheck dependencies
-cCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/main.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-cCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openCLUtilities.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-cCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/FileHandler.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-cCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/RGBAUtilities.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-cCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openGLVisualiser.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-cLd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform normal x86_64
-cGenerateDSYMFile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform
-
-N/Developer/SDKs/MacOSX10.7.sdk
-c000000004E1106D400000000000000EE
-t1309738708
-s238
-
-N/Developer/SDKs/MacOSX10.7.sdk/Library/Frameworks/libpng.framework/Headers/png.h
-c000000004D1168E1000000000001CEAA
-t1292986593
-s118442
-
-N/Developer/SDKs/MacOSX10.7.sdk/Library/Frameworks/libpng.framework/libpng
-c000000004D1168F600000000000AF1B8
-t1292986614
-s717240
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/GLUT.framework/GLUT
-c000000004E1106CE0000000000013488
-t1309738702
-s78984
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/GLUT.framework/Headers/glut.h
-c000000004DFA9473000000000000578C
-t1308267635
-s22412
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenCL.framework/Headers/opencl.h
-c000000004DF851AE00000000000001EF
-t1308119470
-s495
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenCL.framework/OpenCL
-c000000004E1106CF000000000000DD64
-t1309738703
-s56676
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h
-c000000004E02764F0000000000025633
-t1308784207
-s153139
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework/OpenGL
-c000000004E1106CF000000000000A46C
-t1309738703
-s42092
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/assert.h
-c000000004E05497A0000000000000F6E
-t1308969338
-s3950
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/dirent.h
-c000000004E05497B0000000000001707
-t1308969339
-s5895
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/errno.h
-c000000004E05497A00000000000003EB
-t1308969338
-s1003
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/fcntl.h
-c000000004E05497A00000000000003EA
-t1308969338
-s1002
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/getopt.h
-c000000004E05497A0000000000000CBC
-t1308969338
-s3260
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/math.h
-c000000004DF6418700000000000004F1
-t1307984263
-s1265
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/stdio.h
-c000000004E05497C0000000000004763
-t1308969340
-s18275
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/stdlib.h
-c000000004E05497C00000000000030A7
-t1308969340
-s12455
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/string.h
-c000000004E05497C0000000000001A3A
-t1308969340
-s6714
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/sys/stat.h
-c000000004DFD01DB0000000000004B2F
-t1308426715
-s19247
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/sys/time.h
-c000000004DFD01DD0000000000001E64
-t1308426717
-s7780
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/sys/types.h
-c000000004DFD01DF0000000000002905
-t1308426719
-s10501
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/include/unistd.h
-c000000004E05497C0000000000006662
-t1308969340
-s26210
-
-N/Developer/SDKs/MacOSX10.7.sdk/usr/lib/gcc/i686-apple-darwin11/4.2.1/include/stdarg.h
-c000000004DFA707000000000000010DD
-t1308258416
-s4317
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp
-c000000004E5C15670000000000001932
-t1314657639
-s6450
-i"FileHandler.h"
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.h
-c000000004E6083580000000000000254
-t1314947928
-s596
-i<sys/types.h>
-i<dirent.h>
-i<errno.h>
-i<vector>
-i<string>
-i<iostream>
-i<sstream>
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp
-c000000004E5C1F980000000000003799
-t1314660248
-s14233
-i"RGBAUtilities.h"
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.h
-c000000004E5B6F34000000000000096B
-t1314615092
-s2411
-i<unistd.h>
-i<stdlib.h>
-i<stdio.h>
-i<string.h>
-i<stdarg.h>
-i<math.h>
-i<libpng/png.h>
-i<png.h>
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp
-c000000004E66CD8E0000000000002EBB
-t1315360142
-s11963
-i"openCLUtilities.h"
-i"RGBAUtilities.h"
-i"openGLVisualiser.h"
-i<getopt.h>
-i<string>
-i<iostream>
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cpp
-c000000004E66CD8E000000000000370A
-t1315360142
-s14090
-i"openCLUtilities.h"
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.h
-c000000004E5B6F34000000000000071F
-t1314615092
-s1823
-i<assert.h>
-i<errno.h>
-i<stdio.h>
-i<stdlib.h>
-i<unistd.h>
-i<sys/types.h>
-i<sys/stat.h>
-i<fcntl.h>
-i<string.h>
-i"RGBAUtilities.h"
-i"FileHandler.h"
-i<OpenCL/opencl.h>
-i<CL/opencl.h>
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp
-c000000004E66D5680000000000007494
-t1315362152
-s29844
-i"openGLVisualiser.h"
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.h
-c000000004E62E13F00000000000002D1
-t1315103039
-s721
-i<GLUT/glut.h>
-i<OpenGL/gl.h>
-i<GL/glut.h>
-i<GL/gl.h>
-i<math.h>
-i<stdio.h>
-i<stdlib.h>
-i<sys/time.h>
-i<iostream>
-i<string>
-i<fstream>
-i<iostream>
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/FileHandler.o
-t2
-s0
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/MedialAxisTransform.LinkFileList
-c000000004E66EBEE000000000000034C
-t1315367918
-s844
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/RGBAUtilities.o
-t2
-s0
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/main.o
-t2
-s0
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openCLUtilities.o
-t2
-s0
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openGLVisualiser.o
-t2
-s0
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform
-t2
-s0
-
-N/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM
-t2
-s0
-
-CCheck dependencies
-r0
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependenciesac01e66d2317b441^d7161a6e2317b441^---0#1#0#--18"Check dependencies
-
-CCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/FileHandler.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s337060718.110212
-e337060720.497072
-r1
-xCompileC
-xbuild/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/FileHandler.o
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:29: warning: no previous prototype for 'int getdir(std::string, std::string, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:48: warning: no previous prototype for 'int getFilesInDirectoryWithName(std::string, std::string, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:101: warning: no previous prototype for 'std::string remove(std::string, std::string)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp: In function 'std::string remove(std::string, std::string)':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:102: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:102: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp: At global scope:
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:110: warning: no previous prototype for 'bool doesNumberingStartAt0(std::string, std::string)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:134: warning: no previous prototype for 'bool doesNumberingStartAt1(std::string, std::string)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:158: warning: no previous prototype for 'bool noFilesAreMissing(std::string, std::string)'
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection109"Compile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp65701c6e2317b441^533f7f702317b441^-2148"/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:29: warning: no previous prototype for 'int getdir(std::string, std::string, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:48: warning: no previous prototype for 'int getFilesInDirectoryWithName(std::string, std::string, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:101: warning: no previous prototype for 'std::string remove(std::string, std::string)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp: In function 'std::string remove(std::string, std::string)':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:102: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:102: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp: At global scope:/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:110: warning: no previous prototype for 'bool doesNumberingStartAt0(std::string, std::string)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:134: warning: no previous prototype for 'bool doesNumberingStartAt1(std::string, std::string)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp:158: warning: no previous prototype for 'bool noFilesAreMissing(std::string, std::string)'9(21%IDEActivityLogMessage2@240"No previous prototype for 'int getdir(std::string, std::string, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'-337060719#0#356#-1#-23%DVTTextDocumentLocation3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^28#18446744073709551615#28#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@261"No previous prototype for 'int getFilesInDirectoryWithName(std::string, std::string, std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&)'-337060719#356#377#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^47#18446744073709551615#47#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@72"No previous prototype for 'std::string remove(std::string, std::string)'-337060719#733#189#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^100#18446744073709551615#100#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#1085#178#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^101#18446744073709551615#101#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#1263#178#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^101#18446744073709551615#101#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--32%IDEActivityLogContextInfoMessage4@16"At global scope:-337060719#1441#120#-0#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#14"GCC 4.2 Notice--2@80"No previous prototype for 'bool doesNumberingStartAt0(std::string, std::string)'-337060719#1561#197#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^109#18446744073709551615#109#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@80"No previous prototype for 'bool doesNumberingStartAt1(std::string, std::string)'-337060719#1758#197#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^133#18446744073709551615#133#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@76"No previous prototype for 'bool noFilesAreMissing(std::string, std::string)'-337060719#1955#193#-1#-3@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^157#18446744073709551615#157#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--0#0#0#-19%DVTDocumentLocation5@117"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp0000000000000000^2090"CompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/FileHandler.o MedialAxisTransform/FileHandler.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -Os -Wmissing-prototypes -Wreturn-type -Wunused-variable -Wshorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -fvisibility=hidden -fvisibility-inlines-hidden -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-generated-files.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-own-target-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-all-target-headers.hmap -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-project-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/include -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources/x86_64 -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources -F/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -c /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/FileHandler.cpp -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/FileHandler.o
-
-CCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/RGBAUtilities.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s337060718.110295
-e337060718.669553
-r1
-xCompileC
-xbuild/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/RGBAUtilities.o
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: In function 'void read_png_file(char*)':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:88: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: At global scope:
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:226: warning: no previous prototype for 'unsigned char* convolutedGetImage()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:263: warning: no previous prototype for 'void convolutedSetImage(unsigned char*)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:368: warning: no previous prototype for 'void printImageSpecs()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:438: warning: no previous prototype for 'void initializeRedTileRowPtr()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: In function 'unsigned char* createBlackTile()':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:470: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: In function 'unsigned int getImageSizeInFloats()':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:491: warning: implicit conversion shortens 64-bit value into a 32-bit value
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection111"Compile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp6a6b1c6e2317b441^ba65ab6e2317b441^-1830"/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: In function 'void read_png_file(char*)':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:88: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: At global scope:/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:226: warning: no previous prototype for 'unsigned char* convolutedGetImage()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:263: warning: no previous prototype for 'void convolutedSetImage(unsigned char*)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:368: warning: no previous prototype for 'void printImageSpecs()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:438: warning: no previous prototype for 'void initializeRedTileRowPtr()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: In function 'unsigned char* createBlackTile()':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:470: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp: In function 'unsigned int getImageSizeInFloats()':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp:491: warning: implicit conversion shortens 64-bit value into a 32-bit value8(21%IDEActivityLogMessage2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060718#146#179#-1#-23%DVTTextDocumentLocation3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^87#18446744073709551615#87#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--32%IDEActivityLogContextInfoMessage4@16"At global scope:-337060718#325#122#-0#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#14"GCC 4.2 Notice--2@63"No previous prototype for 'unsigned char* convolutedGetImage()'-337060718#447#182#-1#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^225#18446744073709551615#225#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@67"No previous prototype for 'void convolutedSetImage(unsigned char*)'-337060718#629#186#-1#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^262#18446744073709551615#262#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@50"No previous prototype for 'void printImageSpecs()'-337060718#815#169#-1#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^367#18446744073709551615#367#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@58"No previous prototype for 'void initializeRedTileRowPtr()'-337060718#984#177#-1#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^437#18446744073709551615#437#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060718#1314#180#-1#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^469#18446744073709551615#469#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060718#1650#180#-1#-3@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^490#18446744073709551615#490#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--0#0#0#-19%DVTDocumentLocation5@119"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp0000000000000000^2098"CompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/RGBAUtilities.o MedialAxisTransform/RGBAUtilities.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -Os -Wmissing-prototypes -Wreturn-type -Wunused-variable -Wshorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -fvisibility=hidden -fvisibility-inlines-hidden -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-generated-files.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-own-target-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-all-target-headers.hmap -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-project-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/include -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources/x86_64 -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources -F/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -c /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/RGBAUtilities.cpp -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/RGBAUtilities.o
-
-CCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/main.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s337060718.110185
-e337060720.319078
-r1
-xCompileC
-xbuild/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/main.o
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp:108: warning: no previous prototype for 'void cleanKill(int)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp: In function 'int main(int, char**)':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp:274: warning: unused variable 'localWorksize'
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection102"Compile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cppac6f1c6e2317b441^1dae51702317b441^-431"/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp:108: warning: no previous prototype for 'void cleanKill(int)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp: In function 'int main(int, char**)':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp:274: warning: unused variable 'localWorksize'2(21%IDEActivityLogMessage2@47"No previous prototype for 'void cleanKill(int)'-337060720#0#157#-1#-23%DVTTextDocumentLocation3@110"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp0000000000000000^107#18446744073709551615#107#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@31"Unused variable 'localWorksize'-337060720#290#141#-1#-3@110"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp0000000000000000^273#18446744073709551615#273#18446744073709551615#18446744073709551615#0#19"Unused variable '*'--0#0#0#-19%DVTDocumentLocation4@110"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp0000000000000000^2062"CompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/main.o MedialAxisTransform/main.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -Os -Wmissing-prototypes -Wreturn-type -Wunused-variable -Wshorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -fvisibility=hidden -fvisibility-inlines-hidden -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-generated-files.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-own-target-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-all-target-headers.hmap -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-project-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/include -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources/x86_64 -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources -F/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -c /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/main.cpp -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/main.o
-
-CCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openCLUtilities.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s337060718.110196
-e337060720.203079
-r1
-xCompileC
-xbuild/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openCLUtilities.o
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection113"Compile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cppca6c1c6e2317b441^59fb33702317b441^---0#0#0#-19%DVTDocumentLocation2@121"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cpp0000000000000000^2106"CompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openCLUtilities.o MedialAxisTransform/openCLUtilities.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -Os -Wmissing-prototypes -Wreturn-type -Wunused-variable -Wshorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -fvisibility=hidden -fvisibility-inlines-hidden -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-generated-files.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-own-target-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-all-target-headers.hmap -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-project-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/include -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources/x86_64 -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources -F/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -c /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openCLUtilities.cpp -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openCLUtilities.o
-
-CCompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openGLVisualiser.o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s337060718.110639
-e337060720.062651
-r1
-xCompileC
-xbuild/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openGLVisualiser.o
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:20: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:22: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:29: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:674: warning: no previous prototype for 'void LoadTexture(unsigned char*, int)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:706: warning: no previous prototype for 'void storeDataSet(unsigned char*, int, int, int)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:726: warning: no previous prototype for 'void displayUsability()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:753: warning: no previous prototype for 'void Init()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:797: warning: no previous prototype for 'void glutPrint(float, float, float, void*, char*, float, float, float, float)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:812: warning: no previous prototype for 'void display()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:850: warning: no previous prototype for 'void mouseClick(int, int, int, int)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:857: warning: no previous prototype for 'void input(unsigned char, int, int)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:889: warning: no previous prototype for 'void increaseRotation()'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: In function 'void increaseRotation()':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:890: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: At global scope:
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:896: warning: no previous prototype for 'void wait(float)'
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: In function 'void wait(float)':
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:899: warning: implicit conversion shortens 64-bit value into a 32-bit value
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: At global scope:
-o/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:903: warning: no previous prototype for 'void update()'
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection114"Compile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp69731c6e2317b441^960810702317b441^-3431"/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:20: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:22: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:29: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:674: warning: no previous prototype for 'void LoadTexture(unsigned char*, int)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:706: warning: no previous prototype for 'void storeDataSet(unsigned char*, int, int, int)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:726: warning: no previous prototype for 'void displayUsability()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:753: warning: no previous prototype for 'void Init()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:797: warning: no previous prototype for 'void glutPrint(float, float, float, void*, char*, float, float, float, float)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:812: warning: no previous prototype for 'void display()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:850: warning: no previous prototype for 'void mouseClick(int, int, int, int)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:857: warning: no previous prototype for 'void input(unsigned char, int, int)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:889: warning: no previous prototype for 'void increaseRotation()'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: In function 'void increaseRotation()':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:890: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: At global scope:/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:896: warning: no previous prototype for 'void wait(float)'/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: In function 'void wait(float)':/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:899: warning: implicit conversion shortens 64-bit value into a 32-bit value/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp: At global scope:/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp:903: warning: no previous prototype for 'void update()'18(21%IDEActivityLogMessage2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#0#182#-1#-23%DVTTextDocumentLocation3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^19#18446744073709551615#19#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#182#182#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^21#18446744073709551615#21#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#364#182#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^28#18446744073709551615#28#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--2@65"No previous prototype for 'void LoadTexture(unsigned char*, int)'-337060719#546#187#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^673#18446744073709551615#673#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@76"No previous prototype for 'void storeDataSet(unsigned char*, int, int, int)'-337060719#733#198#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^705#18446744073709551615#705#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@51"No previous prototype for 'void displayUsability()'-337060719#931#173#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^725#18446744073709551615#725#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@39"No previous prototype for 'void Init()'-337060719#1104#161#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^752#18446744073709551615#752#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@105"No previous prototype for 'void glutPrint(float, float, float, void*, char*, float, float, float, float)'-337060719#1265#227#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^796#18446744073709551615#796#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@42"No previous prototype for 'void display()'-337060719#1492#164#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^811#18446744073709551615#811#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@63"No previous prototype for 'void mouseClick(int, int, int, int)'-337060719#1656#185#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^849#18446744073709551615#849#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@63"No previous prototype for 'void input(unsigned char, int, int)'-337060719#1841#185#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^856#18446744073709551615#856#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@51"No previous prototype for 'void increaseRotation()'-337060719#2026#173#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^888#18446744073709551615#888#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#2346#183#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^889#18446744073709551615#889#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--32%IDEActivityLogContextInfoMessage4@16"At global scope:-337060719#2529#125#-0#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#14"GCC 4.2 Notice--2@44"No previous prototype for 'void wait(float)'-337060719#2654#166#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^895#18446744073709551615#895#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--2@61"Implicit conversion shortens 64-bit value into a 32-bit value-337060719#2960#183#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^898#18446744073709551615#898#18446744073709551615#18446744073709551615#0#61"Implicit conversion shortens 64-bit value into a 32-bit value--4@16"At global scope:-337060719#3143#125#-0#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#14"GCC 4.2 Notice--2@41"No previous prototype for 'void update()'-337060719#3268#163#-1#-3@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^902#18446744073709551615#902#18446744073709551615#18446744073709551615#0#29"No previous prototype for '*'--0#0#0#-19%DVTDocumentLocation5@122"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp0000000000000000^2110"CompileC build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openGLVisualiser.o MedialAxisTransform/openGLVisualiser.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -Os -Wmissing-prototypes -Wreturn-type -Wunused-variable -Wshorten-64-to-32 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -fvisibility=hidden -fvisibility-inlines-hidden -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-generated-files.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-own-target-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-all-target-headers.hmap -iquote /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/MedialAxisTransform-project-headers.hmap -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/include -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources/x86_64 -I/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/DerivedSources -F/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -c /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/MedialAxisTransform/openGLVisualiser.cpp -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/openGLVisualiser.o
-
-CGenerateDSYMFile /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform
-s337060720.618188
-e337060720.651593
-r1
-xGenerateDSYMFile
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection115"Generating /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM40509e702317b441^57cea6702317b441^---0#0#0#-19%DVTDocumentLocation2@120"file://localhost/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM00f4a495dcffdf42^403"GenerateDSYMFile build/Release/MedialAxisTransform.dSYM build/Release/MedialAxisTransform    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    /Developer/usr/bin/dsymutil /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform.dSYM
-
-CLd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform normal x86_64
-s337060720.503914
-e337060720.611403
-r1
-xLd
-x/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform
-xnormal
-xx86_64
-lSLF03#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection104"Link /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform971a81702317b441^30849c702317b441^---0#0#0#--810"Ld build/Release/MedialAxisTransform normal x86_64    cd /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform    setenv MACOSX_DEPLOYMENT_TARGET 10.7    /Developer/usr/bin/g++-4.2 -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.7.sdk -L/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -F/Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release -filelist /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/MedialAxisTransform.build/Release/MedialAxisTransform.build/Objects-normal/x86_64/MedialAxisTransform.LinkFileList -mmacosx-version-min=10.7 -framework GLUT -framework OpenGL -framework OpenCL -framework libpng -o /Users/beau/Documents/FourthYear/miscProjects/MedialAxisTransform/build/Release/MedialAxisTransform
-
