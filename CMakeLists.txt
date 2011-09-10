@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 2.6)
+project(MedialAxisTransform)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/config)
+
+find_package(GLUT REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(OpenCL REQUIRED)
+find_package(PNG REQUIRED)
+set(CMAKE_CXX_FLAGS "-g -Wall")
+add_subdirectory(MedialAxisTransform)
