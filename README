@@ -1,3 +1,93 @@
-MedialAxisTransform is a software application, that currently utilises OpenCL in order to do three dimensional image analysis. It is my hope that this package can be extended into a tool to be used by researchers in image processing and medical image analysis. Currently fully supported for MacOS X lion (10.7.1) and Linux.
+/*
+ *  README
+ *  MedialAxisTransform
+ *
+ *
+ *  Created by Beau Johnston on 10/09/11.
+ *  Copyright (C) 2011 by Beau Johnston.
+ *
+ *  Please email me if you have any comments, suggestions or advice:
+ *                              beau@inbeta.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+ 
+MedialAxisTransform is a software application, that currently utilises OpenCL in order to do three dimensional image analysis. It is my hope that this package can be extended into a tool to be used by researchers in image processing and medical image analysis. Currently fully supported for MacOS X lion (10.7.1) and Linux. Aside from filtering MedialAxisTransform can apply planer visualisation or a marching cubes volumetric visualisation. Currently it does not apply a MedialAxisTransform, however the kernel can be adapted to, and will be as this project development progresses.
 
-To build:
+To build your system needs:
+cmake
+OpenCL
+OpenGL
+GLUT
+libpng
+
+They can be installed here:
+
+
+After you have these frameworks run my installer/uninstaller script.
+    To install:
+    1)  Open terminal
+    2)  cd to the root MedialAxisTransform directory (where you found this README)
+    3)  Invoke my installer script with: 
+            ./Make.sh
+        Wait for it to finish and done!
+        
+        Note: If you don't have executable permissions, just type
+            chmod u+x Make.sh
+    4)  If my script stuffed up or there was a compilation/linker error, you can try with stages manually:
+            cd (to directory where this README lives)
+            cd build
+            cmake ..
+        If cmake dosn't build properly it's probably an OpenCL.dylib dependency it can't find. Please contact me so I can fix it! :) 
+        Assuming cmake runs fine, stay in terminal and type
+            make 
+        Again if that dosn't run, sorry, let me know! Assuming it does work, the binary is located in the directory MedialAxisTransform/ with the name MedialAxisTransform.
+
+    To uninstall:
+        simply enter into terminal:
+            ./Make.sh clean
+    
+    To run:
+        MedialAxisTransform needs an input data set of type PNG rgba. You can convert from any image file type to PNG using ImageJ/Fiji, located here:
+        Unfortunatly ImageJ/Fuji will not let you explicitly output to rgba only rgb. If you check out my other repositiories on github (BeauJoh) I have a RGBA batch converter located there. 
+        
+        Once you have an image set (a stage of PNG rgba images) they need to have a similar naming convention, (numerically ascending) either starting at 0 or 1, they will be loaded and stored in sequence. Specify image stack with the flag -i followed by a link to the image stack:
+        ./binary -i /images/in.png
+    (this is assuming that all images are stored in sequence as in0.png, in1.png, in2.png...etc)
+    
+    You specify an output very much the same way, the flag is -o.
+        ./binary -o /outImages/out.png
+    
+    If files with the same name exist they are overriden.
+    
+    You specify the kernel with the flag -k, this is the code that OpenCL uses, and where the 3D Sobel filter is stored. Changing the name of the kernel function loaded off the kernel is not so easy yet. As I have been to lazy to focus on usability (sorry).
+    
+    Putting it all together:
+        an example of running the project is:
+        ./binary -k MedialAxisTransform/my_kernel.cl -i DataResources/High-Res-Stage-24-Take-4/out.png -o DataResources/output/result.png
+        
+    Enjoy! 
+    If you have any questions, suggestions or oppinions, please let me know.
+    
+    Beau Johnston 
+    
+    email:      beau@inbeta.org
+    twitter:    BeauJoh                    
+    
+        
