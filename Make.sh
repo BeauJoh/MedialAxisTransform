@@ -1,4 +1,16 @@
 #!/bin/sh
+#ensure directory build exists
+if [ ! -d "build" ]; then
+    echo "creating directory build"
+    mkdir build
+fi
+
+#ensure MedialAxisTransform/ isn't medialAxisTransform
+if [ -d "medialAxisTransform" ]; then
+    echo "moving directory medialAxisTransform to MedialAxisTransform"
+    mv medialAxisTransform MedialAxisTransform
+fi
+
 if [[ ($# = 0) ]]; then
     #build it here!
     echo "Building Code!"
