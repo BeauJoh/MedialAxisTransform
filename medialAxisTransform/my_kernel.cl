@@ -44,8 +44,8 @@ fcomplex Cdiv(fcomplex, fcomplex);
 fcomplex Cadd(fcomplex, fcomplex);
 fcomplex Csub(fcomplex, fcomplex);
 float4 getFillColour();
-static inline int FFT(int,long, float*,float*);
-int DFT(int,int,float*,float*);
+//static inline int FFT(int,long, float*,float*);
+//int DFT(int,int,float*,float*);
 int ClosestPower2(int);
 
 //implementation of defined functions
@@ -137,9 +137,22 @@ float4 getFillColour(){
  dir =  1 gives forward transform
  dir = -1 gives reverse transform
  */
-static inline int FFT(int dir,long m,float *x,float *y){
+__local inline float8 FFT(int dir,long m,float4 xIn,float4 yIn){
+    float x[4];
+    float y[4];
+    
+    x[0] = xIn.x;
+    x[1] = xIn.y;
+    x[2] = xIn.z;
+    x[3] = xIn.w;
+    
+    y[0] = yIn.x;
+    y[1] = yIn.y;
+    y[2] = yIn.z;
+    y[3] = yIn.w;
+    
 	long n,i,i1,j,k,i2,l,l1,l2;
-	double c1,c2,tx,ty,t1,t2,u1,u2,z;
+	float c1,c2,tx,ty,t1,t2,u1,u2,z;
     
 	// Calculate the number of points
 	n = 1;
@@ -189,10 +202,13 @@ static inline int FFT(int dir,long m,float *x,float *y){
 			u2 = u1 * c2 + u2 * c1;
 			u1 = z;
 		}
-		c2 = sqrt((1.0 - c1) / 2.0);
-		if (dir == FFT_FORWARD)
+        c2 = (float)pow((float)((1.0 - c1) / 2.0),1/2);
+		//c2 = (float)sqrt((float)((1.0f - c1) / 2.0f));
+		if (dir == FFT_FORWARD){
 			c2 = -c2;
-		c1 = sqrt((1.0 + c1) / 2.0);
+        }
+        c1 = (float)pow((float)((1.0+c1)/2),1/2);
+		//c1 = (float)sqrt((float)((1.0 + c1) / 2.0));
 	}
     
 	// Scaling for forward transform
@@ -203,10 +219,88 @@ static inline int FFT(int dir,long m,float *x,float *y){
 		}
 	}
     
-	return 1;
+    float8 Out = (float8)(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
+    Out.s0 = x[0];
+    Out.s1 = x[1];
+    Out.s2 = x[2];
+    Out.s3 = x[3];
+    
+	Out.s4 = y[0];
+    Out.s5 = y[1];
+    Out.s6 = y[2];
+    Out.s7 = y[3];
+    
+    return Out;
 }
 
-inline void modify(__local float* x, __local float* y, int size){
+/*
+ Direct fourier transform
+ */
+__local inline float8 DFT(int dir,int m,float4 xIn,float4 yIn)
+{
+    
+    float x1[4];
+    float y1[4];
+
+    float x2[4];
+    float y2[4];
+
+    
+    x1[0] = xIn.x;
+    x1[1] = xIn.y;
+    x1[2] = xIn.z;
+    x1[3] = xIn.w;
+    
+    y1[0] = yIn.x;
+    y1[1] = yIn.y;
+    y1[2] = yIn.z;
+    y1[3] = yIn.w;
+    
+    long i,k;
+    float arg;
+    float cosarg,sinarg;
+    
+    for (i=0;i<m;i++) {
+        x2[i] = 0;
+        y2[i] = 0;
+        arg = - dir * 2.0 * 3.141592654 * (float)i / (float)m;
+        for (k=0;k<m;k++) {
+            cosarg = cos(k * arg);
+            sinarg = sin(k * arg);
+            x2[i] += (x1[k] * cosarg - y1[k] * sinarg);
+            y2[i] += (x1[k] * sinarg + y1[k] * cosarg);
+        }
+    }
+    
+    /* Copy the data back */
+    if (dir == 1) {
+        for (i=0;i<m;i++) {
+            x1[i] = x2[i] / (float)m;
+            y1[i] = y2[i] / (float)m;
+        }
+    } else {
+        for (i=0;i<m;i++) {
+            x1[i] = x2[i];
+            y1[i] = y2[i];
+        }
+    }
+    
+    float8 Out = (float8)(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
+    Out.s0 = x1[0];
+    Out.s1 = x1[1];
+    Out.s2 = x1[2];
+    Out.s3 = x1[3];
+    
+	Out.s4 = y1[0];
+    Out.s5 = y1[1];
+    Out.s6 = y1[2];
+    Out.s7 = y1[3];
+    
+    return Out;
+}
+
+
+inline void modify(float* x, __local float* y, int size){
     for(int i = 0; i < size;i++){
         x[i] = y[i];
     }
@@ -390,9 +484,34 @@ void sobel3D(__read_only image3d_t srcImg,
                     tmpRowI[k] = DatI[i][j][k];
                 }
                 
+                float4 tmpRowRFF;
+                tmpRowRFF.x = tmpRowR[0];
+                tmpRowRFF.y = tmpRowR[1];
+                tmpRowRFF.z = tmpRowR[2];
+                tmpRowRFF.w = tmpRowR[3];
+                
+                float4 tmpRowIFF;
+                tmpRowIFF.x = tmpRowI[0];
+                tmpRowIFF.y = tmpRowI[1];
+                tmpRowIFF.z = tmpRowI[2];
+                tmpRowIFF.w = tmpRowI[3];
+                
+                
+                
                 //apply FFT
-                //FFT(1, 2, tmpRowR, tmpRowI);
-                modify((__local float*)tmpRowR,(__local float*)tmpRowI,4);
+                float8 Out = FFT(1, 2, tmpRowRFF, tmpRowIFF);
+                //float8 Out = DFT(1, 4, tmpRowRFF, tmpRowIFF);
+
+                
+                tmpRowR[0] = Out.s0;
+                tmpRowR[1] = Out.s1;
+                tmpRowR[2] = Out.s2;
+                tmpRowR[3] = Out.s3;
+                
+                tmpRowI[0] = Out.s4;
+                tmpRowI[1] = Out.s5;
+                tmpRowI[2] = Out.s6;
+                tmpRowI[3] = Out.s7;
                 
                 // store the resulting row into original array
                 for (int k = 0; k < 4; k ++) {
@@ -402,6 +521,8 @@ void sobel3D(__read_only image3d_t srcImg,
                 }
             }
         }
+        
+        
         
         
         
