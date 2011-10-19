@@ -156,6 +156,11 @@ void cleanKill(int errNumber){
     exit(errNumber);
 }
 
+typedef struct {
+    float real;
+    float imag; 
+} Complex;
+
 int main(int argc, char *argv[])
 {	
     parseCommandLine(argc , argv);
@@ -164,8 +169,13 @@ int main(int argc, char *argv[])
     
 	// Connect to a compute device
 	//
+#ifdef USING_GPU
 	gpu = 1;
-	if(clGetDeviceIDs(NULL, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL) != CL_SUCCESS)  {
+#else
+    gpu = 0;
+#endif
+	
+    if(clGetDeviceIDs(NULL, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL) != CL_SUCCESS)  {
 		cout << "Failed to create a device group!" << endl;
         cleanKill(EXIT_FAILURE);
     }
@@ -220,7 +230,7 @@ int main(int argc, char *argv[])
 	
 	// Create the compute kernel in the program we wish to run
 	//
-	kernel = clCreateKernel(program, "thresholdAndCopy", &err);
+	kernel = clCreateKernel(program, "sobel3D", &err);
     
 	if (!kernel || err != CL_SUCCESS){
 		cout << "Failed to create compute kernel!" << endl;
@@ -313,7 +323,7 @@ int main(int argc, char *argv[])
     //cout << "max work item sizes" << CL_DEVICE_MAX_WORK_ITEM_SIZES << endl;
     //cout << "max workgroup size is : " << CL_DEVICE_MAX_WORK_GROUP_SIZE << endl;
     cout << "max kernel size is : " << CL_KERNEL_WORK_GROUP_SIZE << endl;
-    size_t localWorksize[3] = {16, 16, 0};
+    size_t localWorksize[3] = {3, 3, 3};
     
     //cout << "Image Width " << getImageWidth() << endl;
     //cout << "Scaled Image Width " << RoundUp((int)localWorksize[0], getImageWidth()) << endl;

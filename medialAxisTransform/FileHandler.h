@@ -67,7 +67,7 @@ private:
     bool doesNumberingStartAt0(string name, string ext);
     bool doesNumberingStartAt1(string name, string ext);
     bool noFilesAreMissing(string name, string ext);
-
+    
     
 public: 
     FileHandler();

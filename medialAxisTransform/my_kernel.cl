@@ -32,90 +32,238 @@
 
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
+typedef struct FCOMPLEX {float r,i;} fcomplex;
+
+
+// function prototypes to avoid openCL compiler warning
+
+fcomplex Cmul(fcomplex,fcomplex);
+fcomplex Complex(float, float);
+fcomplex Conjg(fcomplex);
+fcomplex Cdiv(fcomplex, fcomplex);
+fcomplex Cadd(fcomplex, fcomplex);
+fcomplex Csub(fcomplex, fcomplex);
+float4 getFillColour();
+int FFT(int,long, float*,float*);
+int DFT(int,int,float*,float*);
+int ClosestPower2(int);
+
+//implementation of defined functions
+fcomplex Cmul(fcomplex a, fcomplex b)
+{
+	fcomplex c;
+	c.r=a.r*b.r-a.i*b.i;
+	c.i=a.i*b.r+a.r*b.i;
+	return c;
+}
+
+fcomplex Complex(float re, float im)
+{
+	fcomplex c;
+	c.r=re;
+	c.i=im;
+	return c;
+}
+
+fcomplex Conjg(fcomplex z)
+{
+	fcomplex c;
+	c.r=z.r;
+	c.i = -z.i;
+	return c;
+}
+
+fcomplex Cdiv(fcomplex a, fcomplex b)
+{
+	fcomplex c;
+	float r,den;
+	if (fabs(b.r) >= fabs(b.i)) {
+		r=b.i/b.r;
+		den=b.r+r*b.i;
+		c.r=(a.r+r*a.i)/den;
+		c.i=(a.i-r*a.r)/den;
+	} else {
+		r=b.r/b.i;
+		den=b.i+r*b.r;
+		c.r=(a.r*r+a.i)/den;
+		c.i=(a.i*r-a.r)/den;
+	}
+	return c;
+}
+
+fcomplex Cadd(fcomplex a, fcomplex b)
+{
+	fcomplex c;
+	c.r=a.r+b.r;
+	c.i=a.i+b.i;
+	return c;
+}
+
+fcomplex Csub(fcomplex a, fcomplex b)
+{
+	fcomplex c;
+	c.r=a.r-b.r;
+	c.i=a.i-b.i;
+	return c;
+}
+
 float4 getFillColour(){
     return (float4) (1.0f,0.5f,0.0f,1);
 }
 
+/* ----------------------------------> Real Utility functions start here <------------------------------ */
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef BOOL 
+#define BOOL unsigned int
+#endif
+
+#ifndef NULL 
+#define NULL ((void *)0)
+#endif
+
+#define FFT_FORWARD 1
+#define FFT_REVERSE -1
+
 /*
- This computes an in-place complex-to-complex FFT 
+ This computes an in-place complex-to-complex FFT
  x and y are the real and imaginary arrays of 2^m points.
  dir =  1 gives forward transform
- dir = -1 gives reverse transform 
+ dir = -1 gives reverse transform
  */
-void FFT(short int dir,long m, float *x,float *y)
-{
-    long n,i,i1,j,k,i2,l,l1,l2;
-    double c1,c2,tx,ty,t1,t2,u1,u2,z;
+int FFT(int dir,long m,float *x,float *y){
+	long n,i,i1,j,k,i2,l,l1,l2;
+	double c1,c2,tx,ty,t1,t2,u1,u2,z;
     
-    /* Calculate the number of points */
-    n = 1;
-    for (i=0;i<m;i++) 
-        n *= 2;
+	// Calculate the number of points
+	n = 1;
+	for (i=0;i<m;i++)
+		n *= 2;
     
-    /* Do the bit reversal */
-    i2 = n >> 1;
-    j = 0;
-    for (i=0;i<n-1;i++) {
-        if (i < j) {
-            tx = x[i];
-            ty = y[i];
-            x[i] = x[j];
-            y[i] = y[j];
-            x[j] = tx;
-            y[j] = ty;
-        }
-        k = i2;
-        while (k <= j) {
-            j -= k;
-            k >>= 1;
-        }
-        j += k;
-    }
+	// Do the bit reversal
+	i2 = n >> 1;
+	j = 0;
+	for (i=0;i<n-1;i++) {
+		if (i < j) {
+			tx = x[i];
+			ty = y[i];
+			x[i] = x[j];
+			y[i] = y[j];
+			x[j] = (float)tx;
+			y[j] = (float)ty;
+		}
+		k = i2;
+		while (k <= j) {
+			j -= k;
+			k >>= 1;
+		}
+		j += k;
+	}
     
-    /* Compute the FFT */
-    c1 = -1.0; 
-    c2 = 0.0;
-    l2 = 1;
-    for (l=0;l<m;l++) {
-        l1 = l2;
-        l2 <<= 1;
-        u1 = 1.0; 
-        u2 = 0.0;
-        for (j=0;j<l1;j++) {
-            for (i=j;i<n;i+=l2) {
-                i1 = i + l1;
-                t1 = u1 * x[i1] - u2 * y[i1];
-                t2 = u1 * y[i1] + u2 * x[i1];
-                x[i1] = x[i] - t1; 
-                y[i1] = y[i] - t2;
-                x[i] += t1;
-                y[i] += t2;
-            }
-            z =  u1 * c1 - u2 * c2;
-            u2 = u1 * c2 + u2 * c1;
-            u1 = z;
-        }
-        c2 = sqrt((1.0 - c1) / 2.0);
-        if (dir == 1) 
-            c2 = -c2;
-        c1 = sqrt((1.0 + c1) / 2.0);
-    }
+	// Compute the FFT
+	c1 = -1.0;
+	c2 = 0.0;
+	l2 = 1;
+	for (l=0;l<m;l++) {
+		l1 = l2;
+		l2 <<= 1;
+		u1 = 1.0;
+		u2 = 0.0;
+		for (j=0;j<l1;j++) {
+			for (i=j;i<n;i+=l2) {
+				i1 = i + l1;
+				t1 = u1 * x[i1] - u2 * y[i1];
+				t2 = u1 * y[i1] + u2 * x[i1];
+				x[i1] = (float)(x[i] - t1);
+				y[i1] = (float)(y[i] - t2);
+				x[i] += (float)t1;
+				y[i] += (float)t2;
+			}
+			z =  u1 * c1 - u2 * c2;
+			u2 = u1 * c2 + u2 * c1;
+			u1 = z;
+		}
+		c2 = sqrt((1.0 - c1) / 2.0);
+		if (dir == FFT_FORWARD)
+			c2 = -c2;
+		c1 = sqrt((1.0 + c1) / 2.0);
+	}
     
-    /* Scaling for forward transform */
-    if (dir == 1) {
-        for (i=0;i<n;i++) {
-            x[i] /= n;
-            y[i] /= n;
-        }
-    }
+	// Scaling for forward transform
+	if (dir == FFT_FORWARD) {
+		for (i=0;i<n;i++) {
+			x[i] /= n;
+			y[i] /= n;
+		}
+	}
     
-    return;
+	return 1;
 }
 
-typedef struct {
-    float real;
-    float imag; 
-} Composition;
+/*
+ Direct fourier transform
+ */
+int DFT(int dir,int m,float *x1,float *y1)
+{
+    long i,k;
+    float arg;
+    float cosarg,sinarg;
+    float *x2=NULL,*y2=NULL;
+    
+    x2 = malloc(m*sizeof(float));
+    y2 = malloc(m*sizeof(float));
+    if (x2 == NULL || y2 == NULL)
+        return(FALSE);
+    
+    for (i=0;i<m;i++) {
+        x2[i] = 0;
+        y2[i] = 0;
+        arg = - dir * 2.0 * 3.141592654 * (float)i / (float)m;
+        for (k=0;k<m;k++) {
+            cosarg = cos(k * arg);
+            sinarg = sin(k * arg);
+            x2[i] += (x1[k] * cosarg - y1[k] * sinarg);
+            y2[i] += (x1[k] * sinarg + y1[k] * cosarg);
+        }
+    }
+    
+    /* Copy the data back */
+    if (dir == 1) {
+        for (i=0;i<m;i++) {
+            x1[i] = x2[i] / (float)m;
+            y1[i] = y2[i] / (float)m;
+        }
+    } else {
+        for (i=0;i<m;i++) {
+            x1[i] = x2[i];
+            y1[i] = y2[i];
+        }
+    }
+    
+    free(x2);
+    free(y2);
+    return(TRUE);
+}
+
+//long ClosestPower2(long x){
+//	long double temp=log(x)/log(2);
+//	return (long)pow(2,((int)(temp+0.5)));
+//}
+
+int ClosestPower2(int x){
+	//long double temp=log(x)/log(2);
+	return log((float)x)/log((float)2);
+}
+
+
+/* --------------------------> Real work happens past this point <--------------------------------- */
+
 
 __kernel
 void sobel3D(__read_only image3d_t srcImg,
@@ -123,7 +271,6 @@ void sobel3D(__read_only image3d_t srcImg,
            sampler_t sampler,
            int width, int height, int depth)
 {
-    Composition * myComp;
     
     int x = (int)get_global_id(0);
     int y = (int)get_global_id(1);
@@ -133,6 +280,7 @@ void sobel3D(__read_only image3d_t srcImg,
         return;
     }
     
+    /*
     float filtX[3] = {-1, 0, 1};
     float filtY[3] = {-1, 0, 1};
     float filtZ[3] = {-1, 0, 1};
@@ -150,11 +298,12 @@ void sobel3D(__read_only image3d_t srcImg,
             }
         }
     }
+    */
     
 
 //    float A1[6][3][3];
 //    float A1i[6][3][3];
-
+//
 //    for (int sliceIWant = 0; sliceIWant < 3; sliceIWant ++){
 //        for (int columnIWant = 0; columnIWant < 3; columnIWant ++){
 //            
@@ -178,6 +327,113 @@ void sobel3D(__read_only image3d_t srcImg,
     //FFT(1,3,dvfXYZ[0][0][0],dvfXYZ[0][0][0]);
     //rest goes here!
     
+    //w is ignored? I believe w is included as all data types are a power of 2
+    int4 startImageCoord = (int4) (get_global_id(0) - 1,
+                                   get_global_id(1) - 1,
+                                   get_global_id(2) - 1, 
+                                   1);
+    
+    int4 endImageCoord   = (int4) (get_global_id(0) + 1,
+                                   get_global_id(1) + 1, 
+                                   //remove plus 1 to get indexing proper
+                                   get_global_id(2) + 1 /* + 1*/, 
+                                   1);
+    
+    int4 outImageCoord = (int4) (get_global_id(0),
+                                 get_global_id(1),
+                                 get_global_id(2), 
+                                 1);
+    
+    if (outImageCoord.x < width && outImageCoord.y < height && outImageCoord.z < depth)
+    {
+        float4 thisIn = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
+        float4 thisOut = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
+        
+        long thisDepth = endImageCoord.z - startImageCoord.z;
+        long thisHeight = endImageCoord.y - startImageCoord.y;
+        long thisWidth = endImageCoord.x - startImageCoord.x;
+        //printf((char const *)"%i", (int)thisDepth);
+        //int stackSize = thisDepth*thisWidth*thisHeight;
+
+        //Create Nx * Ny * Nz array of data. i.e. embryo slices (Nx * Ny) pixels * (Nz) slices deep. Denoted by DaR real components.
+//        if(thisDepth != 2 || thisHeight != 2 || thisWidth !=2)
+//            printf((const char*)"wrong dimensioned image chunck!");
+
+        float DaR[3][3][3];
+        float DaI[3][3][3];
+        
+//        int z = startImageCoord.z;
+//        for(int i = 0; i < 4; i++){
+//            int y = startImageCoord.y;
+//            for(int j = 0; j < 4; j++){
+//                int x = startImageCoord.x;
+//                for(int k = 0; k < 4; k++){
+//                    if (k == 3 || j == 3 || i == 3) {
+//                        DaR[i][j][k] = 0;
+//                        DaI[i][j][k] = 0;
+//                    }
+//                    else{
+//                        thisIn = read_imagef(srcImg, sampler, (int4)(x, y, z, 1));
+//                        DaR[i][j][k] = thisIn.x;
+//                        DaI[i][j][k] = 0.0f;
+//                    }
+//                    x++;
+//                }
+//                y++;
+//            }
+//            z++;
+//        }
+        
+        //first collect the red channel
+        for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
+            for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
+                for(int x = startImageCoord.x; x <= endImageCoord.x; x++){
+                    if (((z - startImageCoord.z) == 3) || ((y - startImageCoord.y) == 3) || ((x - startImageCoord.x) == 3)) {
+                        DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
+                        DaI[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
+                    } else{
+                        thisIn = read_imagef(srcImg, sampler, (int4)(x,y,z,1));
+                        DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = thisIn.x;
+                        DaI[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
+                    }
+                }
+            }
+        }
+        
+        
+        
+        //write this channel out
+        for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
+            for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
+                for(int x= startImageCoord.x; x <= endImageCoord.x; x++){
+                    if(DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] > 0.05){                        
+                        write_imagef(dstImg, outImageCoord, (float4)(DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x],0,0,1));
+                    }
+                }
+            }
+        }
+        
+        
+        
+//        //write image chunk back
+//        for(int z = startImageCoord.z; z <= endImageCoord.z; z++)
+//        {
+//            for(int y = startImageCoord.y; y <= endImageCoord.y; y++)
+//            {
+//                for(int x= startImageCoord.x; x <= endImageCoord.x; x++)
+//                {
+//                    if(DaR[(z-startImageCoord.z)*(thisWidth*thisHeight) + (y-startImageCoord.y)*(thisWidth) + (x-startImageCoord.x)] > 0.05){                        
+//                        write_imagef(dstImg, outImageCoord,(float4)(DaR[(z-startImageCoord.z)*(thisWidth*thisHeight) + (y-startImageCoord.y)*(thisWidth) + (x-startImageCoord.x)],0.0f,0.0f,1.0f));
+//                    }
+//                }
+//            }
+//        }
+        
+        //FFT(1,thisWidth*thisHeight*thisDepth,datasetReal,datasetImag);
+        //ThreeDimensionalFFT(1, width, height, depth, datasetReal, datasetImag);
+        
+    }
+            
 }
 
 __kernel
