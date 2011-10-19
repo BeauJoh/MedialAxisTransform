@@ -333,6 +333,9 @@ int main(int argc, char *argv[])
     //  Start up the kernels in the GPUs
     //
 
+    clock_t startTime, stopTime;
+    startTime = clock();
+    
 	err = clEnqueueNDRangeKernel(commands, kernel, 3, localWorksize, globalWorksize, NULL, NULL, NULL, NULL);
 
 	if (openCLUtilities->there_was_an_error(err))
@@ -345,6 +348,11 @@ int main(int argc, char *argv[])
 	// Wait for the command commands to get serviced before reading back results
 	//
 	clFinish(commands);
+    
+    // stop timer and show times
+    stopTime = clock();
+    printf("Time to perform convolution was %f seconds\n", (double)(stopTime-startTime)/CLOCKS_PER_SEC);
+    
     
 	// Read back the results from the device to verify the output
 	//

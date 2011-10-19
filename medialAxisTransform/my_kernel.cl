@@ -33,6 +33,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
 #define FastFourierTransform
+#define VolumetricRendering
 
 typedef struct FCOMPLEX {float r,i;} fcomplex;
 
@@ -441,13 +442,26 @@ void sobel3D(__read_only image3d_t srcImg,
 //            z++;
 //        }
         
+        float4 WriteDaR[3][3][3];
+        float4 WriteDaI[3][3][3];
+
+        
+        for(int c = 0; c < 3; c++){
         //first collect the red channel
         for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
             for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
                 for(int x = startImageCoord.x; x <= endImageCoord.x; x++){
-                        thisIn = read_imagef(srcImg, sampler, (int4)(x,y,z,1));
-                        DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = thisIn.x;
-                        DaI[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
+                    thisIn = read_imagef(srcImg, sampler, (int4)(x,y,z,1));
+                    if(c == 0){
+                    DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = thisIn.x;
+                    }
+                    else if(c == 1){
+                    DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = thisIn.y; 
+                    }
+                    else{
+                    DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = thisIn.z;
+                    }
+                    DaI[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
                 }
             }
         }
@@ -629,8 +643,8 @@ void sobel3D(__read_only image3d_t srcImg,
         for (int i = 0; i < 4; i ++) {
             for (int j = 0; j < 4; j ++) {
                 for (int k = 0; k < 4; k ++) {
-                    DatR[i][j][k] = DatR[i][j][k] / (4*4*4);
-                    DatI[i][j][k] = DatI[i][j][k] / (4*4*4);
+                    DatR[i][j][k] = DatR[i][j][k] / (3*3*3);
+                    DatI[i][j][k] = DatI[i][j][k] / (3*3*3);
                 }
             }
         }
@@ -816,8 +830,8 @@ void sobel3D(__read_only image3d_t srcImg,
         for (int i = 0; i < 4; i ++) {
             for (int j = 0; j < 4; j ++) {
                 for (int k = 0; k < 4; k ++) {
-                    DkR[i][j][k] = DkR[i][j][k] / (4*4*4);
-                    DkI[i][j][k] = DkI[i][j][k] / (4*4*4);
+                    DkR[i][j][k] = DkR[i][j][k] / (3*3*3);
+                    DkI[i][j][k] = DkI[i][j][k] / (3*3*3);
                 }
             }
         }
@@ -998,8 +1012,8 @@ void sobel3D(__read_only image3d_t srcImg,
         for (int i = 0; i < 4; i ++) {
             for (int j = 0; j < 4; j ++) {
                 for (int k = 0; k < 4; k ++) {
-                    DatR[i][j][k] = DatR[i][j][k] * (4*4*4);
-                    DatI[i][j][k] = DatI[i][j][k] * (4*4*4);
+                    DatR[i][j][k] = DatR[i][j][k] * (3*3*3);
+                    DatI[i][j][k] = DatI[i][j][k] * (3*3*3);
                 }
             }
         }
@@ -1015,19 +1029,56 @@ void sobel3D(__read_only image3d_t srcImg,
                 }
             }
         }
+            
+        if(c == 0){
+            for (int i = 0; i < 3; i ++) {
+                for (int j = 0; j < 3; j ++) {
+                    for (int k = 0; k < 3; k ++) {
+                        WriteDaR[i][j][k].x = DaR[i][j][k];
+                        WriteDaI[i][j][k].x = DaI[i][j][k];
+                    }
+                }
+            }
+        }
+        else if(c == 1){
+            for (int i = 0; i < 3; i ++) {
+                for (int j = 0; j < 3; j ++) {
+                    for (int k = 0; k < 3; k ++) {
+                        WriteDaR[i][j][k].y = DaR[i][j][k];
+                        WriteDaI[i][j][k].y = DaI[i][j][k];
+                    }
+                }
+            }
+        }
+        else{
+            for (int i = 0; i < 3; i ++) {
+                for (int j = 0; j < 3; j ++) {
+                    for (int k = 0; k < 3; k ++) {
+                        WriteDaR[i][j][k].z = DaR[i][j][k];
+                        WriteDaI[i][j][k].z = DaI[i][j][k];
+                    }
+                }
+            }
+        }
+    
+            
+        }
 
         
         //write this channel out
         for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
             for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
                 for(int x= startImageCoord.x; x <= endImageCoord.x; x++){
-                    if(DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] > 0.05){                        
-                        write_imagef(dstImg, outImageCoord, (float4)(DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x],0,0,1));
+                    #ifdef VolumetricRendering
+                    if(DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] > 0.05){
+                        write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
                     }
+                    #else
+                    write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
+                    #endif
                 }
             }
         }
-        
         
         
 //        //write image chunk back

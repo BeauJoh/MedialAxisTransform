@@ -32,6 +32,8 @@
 #ifndef MedialAxisTransform_global_h
 #define MedialAxisTransform_global_h
 
+#include <time.h>
+
 void createClassObjects(void);
 void destroyClassObjects(void);
 void cleanKill(int errNumber);
