@@ -32,6 +32,8 @@
 
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
+#define FastFourierTransform
+
 typedef struct FCOMPLEX {float r,i;} fcomplex;
 
 
@@ -202,13 +204,13 @@ __local inline float8 FFT(int dir,long m,float4 xIn,float4 yIn){
 			u2 = u1 * c2 + u2 * c1;
 			u1 = z;
 		}
-        c2 = (float)pow((float)((1.0 - c1) / 2.0),1/2);
-		//c2 = (float)sqrt((float)((1.0f - c1) / 2.0f));
+        //c2 = (float)pow((float)((1.0 - c1) / 2.0),1/2);
+		c2 = (float)sqrt((float)((1.0f - c1) / 2.0f));
 		if (dir == FFT_FORWARD){
 			c2 = -c2;
         }
-        c1 = (float)pow((float)((1.0+c1)/2),1/2);
-		//c1 = (float)sqrt((float)((1.0 + c1) / 2.0));
+        //c1 = (float)pow((float)((1.0+c1)/2),1/2);
+		c1 = (float)sqrt((float)((1.0 + c1) / 2.0));
 	}
     
 	// Scaling for forward transform
@@ -495,13 +497,14 @@ void sobel3D(__read_only image3d_t srcImg,
                 tmpRowIFF.y = tmpRowI[1];
                 tmpRowIFF.z = tmpRowI[2];
                 tmpRowIFF.w = tmpRowI[3];
-                
-                
+        
                 
                 //apply FFT
-                float8 Out = FFT(1, 2, tmpRowRFF, tmpRowIFF);
-                //float8 Out = DFT(1, 4, tmpRowRFF, tmpRowIFF);
-
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_FORWARD, 2, tmpRowRFF, tmpRowIFF);
+                #else
+                float8 Out = DFT(FFT_FORWARD, 4, tmpRowRFF, tmpRowIFF);
+                #endif
                 
                 tmpRowR[0] = Out.s0;
                 tmpRowR[1] = Out.s1;
@@ -523,9 +526,485 @@ void sobel3D(__read_only image3d_t srcImg,
         }
         
         
+        //column wise fft
+        for (int i = 0; i < 4; i ++) {
+            for (int k = 0; k < 4; k ++) {
+                
+                float tmpColR[4];
+                float tmpColI[4];
+                                
+                for (int j = 0; j < 4; j ++) {
+                    // throw into a tmp array to do FFT upon
+                    tmpColR[j] = DatR[i][j][k];
+                    tmpColI[j] = DatI[i][j][k];
+                }
+                
+                float4 tmpColRFF;
+                tmpColRFF.x = tmpColR[0];
+                tmpColRFF.y = tmpColR[1];
+                tmpColRFF.z = tmpColR[2];
+                tmpColRFF.w = tmpColR[3];
+                
+                float4 tmpColIFF;
+                tmpColIFF.x = tmpColI[0];
+                tmpColIFF.y = tmpColI[1];
+                tmpColIFF.z = tmpColI[2];
+                tmpColIFF.w = tmpColI[3];
+                
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_FORWARD, 2, tmpColRFF, tmpColIFF);
+                #else
+                float8 Out = DFT(FFT_FORWARD, 4, tmpColRFF, tmpColIFF);
+                #endif
+
+                tmpColR[0] = Out.s0;
+                tmpColR[1] = Out.s1;
+                tmpColR[2] = Out.s2;
+                tmpColR[3] = Out.s3;
+                
+                tmpColI[0] = Out.s4;
+                tmpColI[1] = Out.s5;
+                tmpColI[2] = Out.s6;
+                tmpColI[3] = Out.s7;
+                
+                for (int j = 0; j < 4; j ++) {
+                    // throw into a tmp array to do FFT upon
+                    DatR[i][j][k] = tmpColR[j];
+                    DatI[i][j][k] = tmpColI[j];
+                }
+            }
+        }
+        
+
+        //slice wise fft
+        for (int j = 0; j < 4; j ++) {
+            for (int k = 0; k < 4; k ++) {
+                float tmpSliR[4];
+                float tmpSliI[4];
+                
+                //throw present slice into a tmp array to do FFT upon
+                for (int i = 0; i < 4; i ++) {
+                    tmpSliR[i] = DatR[i][j][k];
+                    tmpSliI[i] = DatI[i][j][k];
+                }
+                
+                float4 tmpSliRFF;
+                tmpSliRFF.x = tmpSliR[0];
+                tmpSliRFF.y = tmpSliR[1];
+                tmpSliRFF.z = tmpSliR[2];
+                tmpSliRFF.w = tmpSliR[3];
+                
+                float4 tmpSliIFF;
+                tmpSliIFF.x = tmpSliI[0];
+                tmpSliIFF.y = tmpSliI[1];
+                tmpSliIFF.z = tmpSliI[2];
+                tmpSliIFF.w = tmpSliI[3];
+                
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_FORWARD, 2, tmpSliRFF, tmpSliIFF);
+                #else
+                float8 Out = DFT(FFT_FORWARD, 4, tmpSliRFF, tmpSliIFF);
+                #endif
+                
+                tmpSliR[0] = Out.s0;
+                tmpSliR[1] = Out.s1;
+                tmpSliR[2] = Out.s2;
+                tmpSliR[3] = Out.s3;
+                
+                tmpSliI[0] = Out.s4;
+                tmpSliI[1] = Out.s5;
+                tmpSliI[2] = Out.s6;
+                tmpSliI[3] = Out.s7;    
+                
+                //collect present slice into original 4*4*4 array
+                for (int i = 0; i < 4; i ++) {
+                    DatR[i][j][k] = tmpSliR[i];
+                    DatI[i][j][k] = tmpSliI[i];
+                }
+            }
+        }
+
+
+        // ------------------------> Divide Da by (3*3*3) denoted Dk <------------------------ 
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                for (int k = 0; k < 4; k ++) {
+                    DatR[i][j][k] = DatR[i][j][k] / (4*4*4);
+                    DatI[i][j][k] = DatI[i][j][k] / (4*4*4);
+                }
+            }
+        }
         
         
         
+        //convolution 
+        //generate the kernel
+        //(Sobel Power Filter Bank)
+        float DkR[4][4][4];
+        float DkI[4][4][4];
+        
+        float filtX[3] = {-1, 0, 1};
+        float filtY[3] = {-1, 0, 1};
+        float filtZ[3] = {-1, 0, 1};
+        
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                for (int k = 0; k < 4; k++) {
+                    if (i == 3 || j == 3 || k == 3) {
+                        DkR[i][j][k] = 0;
+                    }
+                    else {
+                        DkR[i][j][k] = - pow(filtX[i],5) * pow(filtY[j], 2) * pow(filtZ[k], 2) * exp(-(pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/3);                        
+                    }
+                    DkI[i][j][k] = 0;
+                }
+            }
+        }
+
+        //Apply forward transform upon filter
+        //First x-wise
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                float tmpRowR[4];
+                float tmpRowI[4];
+                
+                //collect a row
+                for (int k = 0; k < 4; k ++) {
+                    // throw into a tmp array to do FFT upon
+                    tmpRowR[k] = DkR[i][j][k];
+                    tmpRowI[k] = DkI[i][j][k];
+                }
+                
+                float4 tmpRowRFF;
+                tmpRowRFF.x = tmpRowR[0];
+                tmpRowRFF.y = tmpRowR[1];
+                tmpRowRFF.z = tmpRowR[2];
+                tmpRowRFF.w = tmpRowR[3];
+                
+                float4 tmpRowIFF;
+                tmpRowIFF.x = tmpRowI[0];
+                tmpRowIFF.y = tmpRowI[1];
+                tmpRowIFF.z = tmpRowI[2];
+                tmpRowIFF.w = tmpRowI[3];
+                
+                
+                //apply FFT
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_FORWARD, 2, tmpRowRFF, tmpRowIFF);
+                #else
+                float8 Out = DFT(FFT_FORWARD, 4, tmpRowRFF, tmpRowIFF);
+                #endif
+                
+                tmpRowR[0] = Out.s0;
+                tmpRowR[1] = Out.s1;
+                tmpRowR[2] = Out.s2;
+                tmpRowR[3] = Out.s3;
+                
+                tmpRowI[0] = Out.s4;
+                tmpRowI[1] = Out.s5;
+                tmpRowI[2] = Out.s6;
+                tmpRowI[3] = Out.s7;
+                
+                // store the resulting row into original array
+                for (int k = 0; k < 4; k ++) {
+                    // throw into a tmp array to do FFT upon
+                    DkR[i][j][k] = tmpRowR[k];
+                    DkI[i][j][k] = tmpRowI[k];
+                }
+            }
+        }
+
+        //Then y-wise
+        for (int i = 0; i < 4; i ++) {
+            for (int k = 0; k < 4; k ++) {
+                
+                float tmpColR[4];
+                float tmpColI[4];
+                
+                for (int j = 0; j < 4; j ++) {
+                    // throw into a tmp array to do FFT upon
+                    tmpColR[j] = DkR[i][j][k];
+                    tmpColI[j] = DkI[i][j][k];
+                }
+                
+                float4 tmpColRFF;
+                tmpColRFF.x = tmpColR[0];
+                tmpColRFF.y = tmpColR[1];
+                tmpColRFF.z = tmpColR[2];
+                tmpColRFF.w = tmpColR[3];
+                
+                float4 tmpColIFF;
+                tmpColIFF.x = tmpColI[0];
+                tmpColIFF.y = tmpColI[1];
+                tmpColIFF.z = tmpColI[2];
+                tmpColIFF.w = tmpColI[3];
+                
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_FORWARD, 2, tmpColRFF, tmpColIFF);
+                #else
+                float8 Out = DFT(FFT_FORWARD, 4, tmpColRFF, tmpColIFF);
+                #endif
+                
+                tmpColR[0] = Out.s0;
+                tmpColR[1] = Out.s1;
+                tmpColR[2] = Out.s2;
+                tmpColR[3] = Out.s3;
+                
+                tmpColI[0] = Out.s4;
+                tmpColI[1] = Out.s5;
+                tmpColI[2] = Out.s6;
+                tmpColI[3] = Out.s7;
+                
+                for (int j = 0; j < 4; j ++) {
+                    // throw into a tmp array to do FFT upon
+                    DkR[i][j][k] = tmpColR[j];
+                    DkI[i][j][k] = tmpColI[j];
+                }
+            }
+        }
+        
+        //Then z-wise
+        for (int j = 0; j < 4; j ++) {
+            for (int k = 0; k < 4; k ++) {
+                float tmpSliR[4];
+                float tmpSliI[4];
+                
+                //throw present slice into a tmp array to do FFT upon
+                for (int i = 0; i < 4; i ++) {
+                    tmpSliR[i] = DkR[i][j][k];
+                    tmpSliI[i] = DkI[i][j][k];
+                }
+                
+                float4 tmpSliRFF;
+                tmpSliRFF.x = tmpSliR[0];
+                tmpSliRFF.y = tmpSliR[1];
+                tmpSliRFF.z = tmpSliR[2];
+                tmpSliRFF.w = tmpSliR[3];
+                
+                float4 tmpSliIFF;
+                tmpSliIFF.x = tmpSliI[0];
+                tmpSliIFF.y = tmpSliI[1];
+                tmpSliIFF.z = tmpSliI[2];
+                tmpSliIFF.w = tmpSliI[3];
+                
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_FORWARD, 2, tmpSliRFF, tmpSliIFF);
+                #else
+                float8 Out = DFT(FFT_FORWARD, 4, tmpSliRFF, tmpSliIFF);
+                #endif
+                
+                tmpSliR[0] = Out.s0;
+                tmpSliR[1] = Out.s1;
+                tmpSliR[2] = Out.s2;
+                tmpSliR[3] = Out.s3;
+                
+                tmpSliI[0] = Out.s4;
+                tmpSliI[1] = Out.s5;
+                tmpSliI[2] = Out.s6;
+                tmpSliI[3] = Out.s7;    
+                
+                //collect present slice into original 4*4*4 array
+                for (int i = 0; i < 4; i ++) {
+                    DkR[i][j][k] = tmpSliR[i];
+                    DkI[i][j][k] = tmpSliI[i];
+                }
+            }
+        }
+
+        //apply convolution
+        // ------------------------> Divide Dk by (3*3*3) denoted Dk <------------------------ 
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                for (int k = 0; k < 4; k ++) {
+                    DkR[i][j][k] = DkR[i][j][k] / (4*4*4);
+                    DkI[i][j][k] = DkI[i][j][k] / (4*4*4);
+                }
+            }
+        }
+        
+        // ------------------------> Take the complex conjugate of Da <---------------------------
+        for (int i = 0; i < 3; i ++) {
+            for (int j = 0; j < 3; j ++) {
+                for (int k = 0; k < 3; k ++) {
+                    DatI[i][j][k] = -DatI[i][j][k];
+                }
+            }
+        }
+        
+        // ------------------------> (Convolution) Multiply Da conjugate by Dk <-------------
+        for (int i = 0; i < 3; i ++) {
+            for (int j = 0; j < 3; j ++) {
+                for (int k = 0; k < 3; k ++) {
+                    DatR[i][j][k] = DatR[i][j][k] * DkR[i][j][k];
+                    DatI[i][j][k] = DatI[i][j][k] * DkI[i][j][k];
+                }
+            }
+        }
+        //end of convolution
+        
+        
+        
+        //inverse transformation
+        //First z-wise (slice)
+        for (int j = 0; j < 4; j ++) {
+            for (int k = 0; k < 4; k ++) {
+                float tmpSliR[4];
+                float tmpSliI[4];
+                
+                //throw present slice into a tmp array to do FFT upon
+                for (int i = 0; i < 4; i ++) {
+                    tmpSliR[i] = DatR[i][j][k];
+                    tmpSliI[i] = DatI[i][j][k];
+                }
+                
+                float4 tmpSliRFF;
+                tmpSliRFF.x = tmpSliR[0];
+                tmpSliRFF.y = tmpSliR[1];
+                tmpSliRFF.z = tmpSliR[2];
+                tmpSliRFF.w = tmpSliR[3];
+                
+                float4 tmpSliIFF;
+                tmpSliIFF.x = tmpSliI[0];
+                tmpSliIFF.y = tmpSliI[1];
+                tmpSliIFF.z = tmpSliI[2];
+                tmpSliIFF.w = tmpSliI[3];
+                
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_REVERSE, 2, tmpSliRFF, tmpSliIFF);
+                #else
+                float8 Out = DFT(FFT_REVERSE, 4, tmpSliRFF, tmpSliIFF);
+                #endif
+                
+                tmpSliR[0] = Out.s0;
+                tmpSliR[1] = Out.s1;
+                tmpSliR[2] = Out.s2;
+                tmpSliR[3] = Out.s3;
+                
+                tmpSliI[0] = Out.s4;
+                tmpSliI[1] = Out.s5;
+                tmpSliI[2] = Out.s6;
+                tmpSliI[3] = Out.s7;    
+                
+                //collect present slice into original 4*4*4 array
+                for (int i = 0; i < 4; i ++) {
+                    DatR[i][j][k] = tmpSliR[i];
+                    DatI[i][j][k] = tmpSliI[i];
+                }
+            }
+        }
+        
+        //Then y-wise (column wise inverse fft)
+        for (int i = 0; i < 4; i ++) {
+            for (int k = 0; k < 4; k ++) {
+                
+                float tmpColR[4];
+                float tmpColI[4];
+                
+                for (int j = 0; j < 4; j ++) {
+                    // throw into a tmp array to do FFT upon
+                    tmpColR[j] = DatR[i][j][k];
+                    tmpColI[j] = DatI[i][j][k];
+                }
+                
+                float4 tmpColRFF;
+                tmpColRFF.x = tmpColR[0];
+                tmpColRFF.y = tmpColR[1];
+                tmpColRFF.z = tmpColR[2];
+                tmpColRFF.w = tmpColR[3];
+                
+                float4 tmpColIFF;
+                tmpColIFF.x = tmpColI[0];
+                tmpColIFF.y = tmpColI[1];
+                tmpColIFF.z = tmpColI[2];
+                tmpColIFF.w = tmpColI[3];
+                
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_REVERSE, 2, tmpColRFF, tmpColIFF);
+                #else
+                float8 Out = DFT(FFT_REVERSE, 4, tmpColRFF, tmpColIFF);
+                #endif
+                
+                tmpColR[0] = Out.s0;
+                tmpColR[1] = Out.s1;
+                tmpColR[2] = Out.s2;
+                tmpColR[3] = Out.s3;
+                
+                tmpColI[0] = Out.s4;
+                tmpColI[1] = Out.s5;
+                tmpColI[2] = Out.s6;
+                tmpColI[3] = Out.s7;
+                
+                for (int j = 0; j < 4; j ++) {
+                    // throw into a tmp array to do FFT upon
+                    DatR[i][j][k] = tmpColR[j];
+                    DatI[i][j][k] = tmpColI[j];
+                }
+            }
+        }
+
+        //Finally x-wise (row wise inv fft)
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                float tmpRowR[4];
+                float tmpRowI[4];
+                
+                //collect a row
+                for (int k = 0; k < 4; k ++) {
+                    // throw into a tmp array to do FFT upon
+                    tmpRowR[k] = DatR[i][j][k];
+                    tmpRowI[k] = DatI[i][j][k];
+                }
+                
+                float4 tmpRowRFF;
+                tmpRowRFF.x = tmpRowR[0];
+                tmpRowRFF.y = tmpRowR[1];
+                tmpRowRFF.z = tmpRowR[2];
+                tmpRowRFF.w = tmpRowR[3];
+                
+                float4 tmpRowIFF;
+                tmpRowIFF.x = tmpRowI[0];
+                tmpRowIFF.y = tmpRowI[1];
+                tmpRowIFF.z = tmpRowI[2];
+                tmpRowIFF.w = tmpRowI[3];
+                
+                
+                //apply FFT
+                #ifdef FastFourierTransform
+                float8 Out = FFT(FFT_REVERSE, 2, tmpRowRFF, tmpRowIFF);
+                #else
+                float8 Out = DFT(FFT_REVERSE, 4, tmpRowRFF, tmpRowIFF);
+                #endif
+                
+                tmpRowR[0] = Out.s0;
+                tmpRowR[1] = Out.s1;
+                tmpRowR[2] = Out.s2;
+                tmpRowR[3] = Out.s3;
+                
+                tmpRowI[0] = Out.s4;
+                tmpRowI[1] = Out.s5;
+                tmpRowI[2] = Out.s6;
+                tmpRowI[3] = Out.s7;
+                
+                // store the resulting row into original array
+                for (int k = 0; k < 4; k ++) {
+                    // throw into a tmp array to do FFT upon
+                    DatR[i][j][k] = tmpRowR[k];
+                    DatI[i][j][k] = tmpRowI[k];
+                }
+            }
+        }
+
+        // ------------------------> Multiply Da by (3*3*3) denoted Da' <------------------------ 
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                for (int k = 0; k < 4; k ++) {
+                    DatR[i][j][k] = DatR[i][j][k] * (4*4*4);
+                    DatI[i][j][k] = DatI[i][j][k] * (4*4*4);
+                }
+            }
+        }
+        
+        //populate back into a non dyadic matrix (3*3*3)
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
                 for(int k = 0; k < 4; k++){
