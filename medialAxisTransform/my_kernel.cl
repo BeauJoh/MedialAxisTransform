@@ -44,7 +44,7 @@ fcomplex Cdiv(fcomplex, fcomplex);
 fcomplex Cadd(fcomplex, fcomplex);
 fcomplex Csub(fcomplex, fcomplex);
 float4 getFillColour();
-int FFT(int,long, float*,float*);
+static inline int FFT(int,long, float*,float*);
 int DFT(int,int,float*,float*);
 int ClosestPower2(int);
 
@@ -137,7 +137,7 @@ float4 getFillColour(){
  dir =  1 gives forward transform
  dir = -1 gives reverse transform
  */
-int FFT(int dir,long m,float *x,float *y){
+static inline int FFT(int dir,long m,float *x,float *y){
 	long n,i,i1,j,k,i2,l,l1,l2;
 	double c1,c2,tx,ty,t1,t2,u1,u2,z;
     
@@ -206,49 +206,10 @@ int FFT(int dir,long m,float *x,float *y){
 	return 1;
 }
 
-/*
- Direct fourier transform
- */
-int DFT(int dir,int m,float *x1,float *y1)
-{
-    long i,k;
-    float arg;
-    float cosarg,sinarg;
-    float *x2=NULL,*y2=NULL;
-    
-    x2 = malloc(m*sizeof(float));
-    y2 = malloc(m*sizeof(float));
-    if (x2 == NULL || y2 == NULL)
-        return(FALSE);
-    
-    for (i=0;i<m;i++) {
-        x2[i] = 0;
-        y2[i] = 0;
-        arg = - dir * 2.0 * 3.141592654 * (float)i / (float)m;
-        for (k=0;k<m;k++) {
-            cosarg = cos(k * arg);
-            sinarg = sin(k * arg);
-            x2[i] += (x1[k] * cosarg - y1[k] * sinarg);
-            y2[i] += (x1[k] * sinarg + y1[k] * cosarg);
-        }
+inline void modify(__local float* x, __local float* y, int size){
+    for(int i = 0; i < size;i++){
+        x[i] = y[i];
     }
-    
-    /* Copy the data back */
-    if (dir == 1) {
-        for (i=0;i<m;i++) {
-            x1[i] = x2[i] / (float)m;
-            y1[i] = y2[i] / (float)m;
-        }
-    } else {
-        for (i=0;i<m;i++) {
-            x1[i] = x2[i];
-            y1[i] = y2[i];
-        }
-    }
-    
-    free(x2);
-    free(y2);
-    return(TRUE);
 }
 
 //long ClosestPower2(long x){
@@ -388,19 +349,73 @@ void sobel3D(__read_only image3d_t srcImg,
         for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
             for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
                 for(int x = startImageCoord.x; x <= endImageCoord.x; x++){
-                    if (((z - startImageCoord.z) == 3) || ((y - startImageCoord.y) == 3) || ((x - startImageCoord.x) == 3)) {
-                        DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
-                        DaI[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
-                    } else{
                         thisIn = read_imagef(srcImg, sampler, (int4)(x,y,z,1));
                         DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = thisIn.x;
                         DaI[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] = 0.0f;
+                }
+            }
+        }
+        
+        float DatR[4][4][4];
+        float DatI[4][4][4];
+        
+        
+        //set out 4 window size (need 3 for correct filter focus, however need to be dyadic for fft, solution use window 
+        //size of 4*4*4 whilst only populating the 3*3*3 and padding the rest with zeros)
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 4; j++){
+                for(int k = 0; k < 4; k++){
+                    if (k == 3 || j == 3 || i == 3) {
+                        DatR[i][j][k] = 0;
+                        DatI[i][j][k] = 0;
+                    }
+                    else{
+                        DatR[i][j][k] = DaR[i][j][k];
+                        DatI[i][j][k] = DaI[i][j][k];
                     }
                 }
             }
         }
         
+        //row wise fft
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 4; j ++) {
+                float tmpRowR[4];
+                float tmpRowI[4];
+                
+                //collect a row
+                for (int k = 0; k < 4; k ++) {
+                    // throw into a tmp array to do FFT upon
+                    tmpRowR[k] = DatR[i][j][k];
+                    tmpRowI[k] = DatI[i][j][k];
+                }
+                
+                //apply FFT
+                //FFT(1, 2, tmpRowR, tmpRowI);
+                modify((__local float*)tmpRowR,(__local float*)tmpRowI,4);
+                
+                // store the resulting row into original array
+                for (int k = 0; k < 4; k ++) {
+                    // throw into a tmp array to do FFT upon
+                    DatR[i][j][k] = tmpRowR[k];
+                    DatI[i][j][k] = tmpRowI[k];
+                }
+            }
+        }
         
+        
+        
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 4; j++){
+                for(int k = 0; k < 4; k++){
+                    if (k != 3 && j != 3 && i != 3) {
+                        DaR[i][j][k] = DatR[i][j][k];
+                        DaI[i][j][k] = DatI[i][j][k];
+                    }
+                }
+            }
+        }
+
         
         //write this channel out
         for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
