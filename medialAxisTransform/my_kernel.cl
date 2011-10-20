@@ -33,84 +33,16 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
 #define FastFourierTransform
-#define VolumetricRendering
+//#define VolumetricRendering
 
-typedef struct FCOMPLEX {float r,i;} fcomplex;
 
 
 // function prototypes to avoid openCL compiler warning
+__local static inline float8 FFT(int,long,float4,float4);
+__local static inline float8 DFT(int,int,float4,float4);
+__global static inline float4 getFillColour(void);
 
-fcomplex Cmul(fcomplex,fcomplex);
-fcomplex Complex(float, float);
-fcomplex Conjg(fcomplex);
-fcomplex Cdiv(fcomplex, fcomplex);
-fcomplex Cadd(fcomplex, fcomplex);
-fcomplex Csub(fcomplex, fcomplex);
-float4 getFillColour();
-//static inline int FFT(int,long, float*,float*);
-//int DFT(int,int,float*,float*);
-int ClosestPower2(int);
-
-//implementation of defined functions
-fcomplex Cmul(fcomplex a, fcomplex b)
-{
-	fcomplex c;
-	c.r=a.r*b.r-a.i*b.i;
-	c.i=a.i*b.r+a.r*b.i;
-	return c;
-}
-
-fcomplex Complex(float re, float im)
-{
-	fcomplex c;
-	c.r=re;
-	c.i=im;
-	return c;
-}
-
-fcomplex Conjg(fcomplex z)
-{
-	fcomplex c;
-	c.r=z.r;
-	c.i = -z.i;
-	return c;
-}
-
-fcomplex Cdiv(fcomplex a, fcomplex b)
-{
-	fcomplex c;
-	float r,den;
-	if (fabs(b.r) >= fabs(b.i)) {
-		r=b.i/b.r;
-		den=b.r+r*b.i;
-		c.r=(a.r+r*a.i)/den;
-		c.i=(a.i-r*a.r)/den;
-	} else {
-		r=b.r/b.i;
-		den=b.i+r*b.r;
-		c.r=(a.r*r+a.i)/den;
-		c.i=(a.i*r-a.r)/den;
-	}
-	return c;
-}
-
-fcomplex Cadd(fcomplex a, fcomplex b)
-{
-	fcomplex c;
-	c.r=a.r+b.r;
-	c.i=a.i+b.i;
-	return c;
-}
-
-fcomplex Csub(fcomplex a, fcomplex b)
-{
-	fcomplex c;
-	c.r=a.r-b.r;
-	c.i=a.i-b.i;
-	return c;
-}
-
-float4 getFillColour(){
+__global static float4 getFillColour(void){
     return (float4) (1.0f,0.5f,0.0f,1);
 }
 
@@ -140,7 +72,7 @@ float4 getFillColour(){
  dir =  1 gives forward transform
  dir = -1 gives reverse transform
  */
-__local inline float8 FFT(int dir,long m,float4 xIn,float4 yIn){
+__local static inline float8 FFT(int dir,long m,float4 xIn,float4 yIn){
     float x[4];
     float y[4];
     
@@ -239,7 +171,7 @@ __local inline float8 FFT(int dir,long m,float4 xIn,float4 yIn){
 /*
  Direct fourier transform
  */
-__local inline float8 DFT(int dir,int m,float4 xIn,float4 yIn)
+__local static inline float8 DFT(int dir,int m,float4 xIn,float4 yIn)
 {
     
     float x1[4];
@@ -303,23 +235,6 @@ __local inline float8 DFT(int dir,int m,float4 xIn,float4 yIn)
 }
 
 
-inline void modify(float* x, __local float* y, int size){
-    for(int i = 0; i < size;i++){
-        x[i] = y[i];
-    }
-}
-
-//long ClosestPower2(long x){
-//	long double temp=log(x)/log(2);
-//	return (long)pow(2,((int)(temp+0.5)));
-//}
-
-int ClosestPower2(int x){
-	//long double temp=log(x)/log(2);
-	return log((float)x)/log((float)2);
-}
-
-
 /* --------------------------> Real work happens past this point <--------------------------------- */
 
 
@@ -330,60 +245,14 @@ void sobel3D(__read_only image3d_t srcImg,
            int width, int height, int depth)
 {
     
-    int x = (int)get_global_id(0);
-    int y = (int)get_global_id(1);
-    int z = (int)get_global_id(2);
+    //int x = (int)get_global_id(0);
+    //int y = (int)get_global_id(1);
+    //int z = (int)get_global_id(2);
     
-    if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
-        return;
-    }
-    
-    /*
-    float filtX[3] = {-1, 0, 1};
-    float filtY[3] = {-1, 0, 1};
-    float filtZ[3] = {-1, 0, 1};
-    
-    float dvfXYZ[3][3][3];
-    float dvfYZX[3][3][3];
-    float dvfZXY[3][3][3];
-
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            for(int k = 0; k < 3; k++){
-                dvfXYZ[i][j][k] = - filtX[i] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
-                dvfYZX[i][j][k] = - filtY[j] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
-                dvfZXY[i][j][k] = - filtZ[k] * exp(-((pow(filtX[i],2)+pow(filtY[j],2)+pow(filtZ[k],2))/2));
-            }
-        }
-    }
-    */
-    
-
-//    float A1[6][3][3];
-//    float A1i[6][3][3];
-//
-//    for (int sliceIWant = 0; sliceIWant < 3; sliceIWant ++){
-//        for (int columnIWant = 0; columnIWant < 3; columnIWant ++){
-//            
-//            float * aRow = &A1[0][0][0];
-//            float * aRowImag = &A1i[0][0][0];
-//            
-//            for (int i = 0; i < 3; i++){
-//                *aRow++ = dvfXYZ[i][columnIWant][sliceIWant];
-//            }
-//            FFT( (short int)1, (long)3, (float*)aRow, (float*)aRowImag);
-//            
-//        }
-//    }
-
-//    float * aRow = 0.0f;
-//    float * aRowImag = 0.0f;
-//    
-//    FFT( (short int)1, (long)2, aRow, aRowImag);
-
-    //float * A1 = dvfXYZ[0][][];
-    //FFT(1,3,dvfXYZ[0][0][0],dvfXYZ[0][0][0]);
-    //rest goes here!
+    //if its out of bounds why bother?
+    //if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
+    //    return;
+    //}
     
     //w is ignored? I believe w is included as all data types are a power of 2
     int4 startImageCoord = (int4) (get_global_id(0) - 1,
@@ -405,49 +274,23 @@ void sobel3D(__read_only image3d_t srcImg,
     if (outImageCoord.x < width && outImageCoord.y < height && outImageCoord.z < depth)
     {
         float4 thisIn = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
-        float4 thisOut = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
         
-        long thisDepth = endImageCoord.z - startImageCoord.z;
-        long thisHeight = endImageCoord.y - startImageCoord.y;
-        long thisWidth = endImageCoord.x - startImageCoord.x;
+//        long thisDepth = endImageCoord.z - startImageCoord.z;
+//        long thisHeight = endImageCoord.y - startImageCoord.y;
+//        long thisWidth = endImageCoord.x - startImageCoord.x;
         //printf((char const *)"%i", (int)thisDepth);
         //int stackSize = thisDepth*thisWidth*thisHeight;
 
-        //Create Nx * Ny * Nz array of data. i.e. embryo slices (Nx * Ny) pixels * (Nz) slices deep. Denoted by DaR real components.
-//        if(thisDepth != 2 || thisHeight != 2 || thisWidth !=2)
-//            printf((const char*)"wrong dimensioned image chunck!");
 
         float DaR[3][3][3];
         float DaI[3][3][3];
-        
-//        int z = startImageCoord.z;
-//        for(int i = 0; i < 4; i++){
-//            int y = startImageCoord.y;
-//            for(int j = 0; j < 4; j++){
-//                int x = startImageCoord.x;
-//                for(int k = 0; k < 4; k++){
-//                    if (k == 3 || j == 3 || i == 3) {
-//                        DaR[i][j][k] = 0;
-//                        DaI[i][j][k] = 0;
-//                    }
-//                    else{
-//                        thisIn = read_imagef(srcImg, sampler, (int4)(x, y, z, 1));
-//                        DaR[i][j][k] = thisIn.x;
-//                        DaI[i][j][k] = 0.0f;
-//                    }
-//                    x++;
-//                }
-//                y++;
-//            }
-//            z++;
-//        }
         
         float4 WriteDaR[3][3][3];
         float4 WriteDaI[3][3][3];
 
         
         for(int c = 0; c < 3; c++){
-        //first collect the red channel
+        //first collect the red channel, then green than blue
         for(int z = startImageCoord.z; z <= endImageCoord.z; z++){
             for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
                 for(int x = startImageCoord.x; x <= endImageCoord.x; x++){
@@ -643,8 +486,8 @@ void sobel3D(__read_only image3d_t srcImg,
         for (int i = 0; i < 4; i ++) {
             for (int j = 0; j < 4; j ++) {
                 for (int k = 0; k < 4; k ++) {
-                    DatR[i][j][k] = DatR[i][j][k] / (3*3*3);
-                    DatI[i][j][k] = DatI[i][j][k] / (3*3*3);
+                    DatR[i][j][k] = DatR[i][j][k] / (4*4*4);
+                    DatI[i][j][k] = DatI[i][j][k] / (4*4*4);
                 }
             }
         }
@@ -675,6 +518,17 @@ void sobel3D(__read_only image3d_t srcImg,
             }
         }
 
+        //check filter coefficients
+//      if(outImageCoord.x == 6 && outImageCoord.y == 6 && outImageCoord.z == 6){
+//            for (int i = 0; i < 3; i ++) {
+//                for (int j = 0; j < 3; j ++) {
+//                    for (int k = 0; k < 3; k++) {
+//                        printf((const char*)"at index[%i][%i][%i] -> %f\n",i,j,k, DkR[i][j][k]);
+//                    }
+//                }
+//            }
+//      }
+        
         //Apply forward transform upon filter
         //First x-wise
         for (int i = 0; i < 4; i ++) {
@@ -830,8 +684,8 @@ void sobel3D(__read_only image3d_t srcImg,
         for (int i = 0; i < 4; i ++) {
             for (int j = 0; j < 4; j ++) {
                 for (int k = 0; k < 4; k ++) {
-                    DkR[i][j][k] = DkR[i][j][k] / (3*3*3);
-                    DkI[i][j][k] = DkI[i][j][k] / (3*3*3);
+                    DkR[i][j][k] = DkR[i][j][k] / (4*4*4);
+                    DkI[i][j][k] = DkI[i][j][k] / (4*4*4);
                 }
             }
         }
@@ -1012,8 +866,8 @@ void sobel3D(__read_only image3d_t srcImg,
         for (int i = 0; i < 4; i ++) {
             for (int j = 0; j < 4; j ++) {
                 for (int k = 0; k < 4; k ++) {
-                    DatR[i][j][k] = DatR[i][j][k] * (3*3*3);
-                    DatI[i][j][k] = DatI[i][j][k] * (3*3*3);
+                    DatR[i][j][k] = DatR[i][j][k] * (4*4*4);
+                    DatI[i][j][k] = DatI[i][j][k] * (4*4*4);
                 }
             }
         }
@@ -1025,6 +879,17 @@ void sobel3D(__read_only image3d_t srcImg,
                     if (k != 3 && j != 3 && i != 3) {
                         DaR[i][j][k] = DatR[i][j][k];
                         DaI[i][j][k] = DatI[i][j][k];
+                    }
+                }
+            }
+        }
+
+            
+      if(outImageCoord.x == 12 && outImageCoord.y == 222 && outImageCoord.z == 129){
+            for (int i = 0; i < 3; i ++) {
+                for (int j = 0; j < 3; j ++) {
+                    for (int k = 0; k < 3; k++) {
+                        printf((const char*)"at index[%i][%i][%i] -> %f\n",i,j,k, DatR[i][j][k]);
                     }
                 }
             }
@@ -1070,7 +935,7 @@ void sobel3D(__read_only image3d_t srcImg,
             for(int y = startImageCoord.y; y <= endImageCoord.y; y++){
                 for(int x= startImageCoord.x; x <= endImageCoord.x; x++){
                     #ifdef VolumetricRendering
-                    if(DaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x] > 0.05){
+                    if(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x > 0.05f && WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y > 0.05f && WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z > 0.05f){
                         write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
                     }
                     #else
@@ -1079,27 +944,7 @@ void sobel3D(__read_only image3d_t srcImg,
                 }
             }
         }
-        
-        
-//        //write image chunk back
-//        for(int z = startImageCoord.z; z <= endImageCoord.z; z++)
-//        {
-//            for(int y = startImageCoord.y; y <= endImageCoord.y; y++)
-//            {
-//                for(int x= startImageCoord.x; x <= endImageCoord.x; x++)
-//                {
-//                    if(DaR[(z-startImageCoord.z)*(thisWidth*thisHeight) + (y-startImageCoord.y)*(thisWidth) + (x-startImageCoord.x)] > 0.05){                        
-//                        write_imagef(dstImg, outImageCoord,(float4)(DaR[(z-startImageCoord.z)*(thisWidth*thisHeight) + (y-startImageCoord.y)*(thisWidth) + (x-startImageCoord.x)],0.0f,0.0f,1.0f));
-//                    }
-//                }
-//            }
-//        }
-        
-        //FFT(1,thisWidth*thisHeight*thisDepth,datasetReal,datasetImag);
-        //ThreeDimensionalFFT(1, width, height, depth, datasetReal, datasetImag);
-        
     }
-            
 }
 
 __kernel
