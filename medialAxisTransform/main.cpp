@@ -230,7 +230,11 @@ int main(int argc, char *argv[])
 	
 	// Create the compute kernel in the program we wish to run
 	//
+    #ifdef USING_GPU
 	kernel = clCreateKernel(program, "sobel3D", &err);
+    #else
+    kernel = clCreateKernel(program, "sobel3DCPU", &err);
+    #endif
     
 	if (!kernel || err != CL_SUCCESS){
 		cout << "Failed to create compute kernel!" << endl;
