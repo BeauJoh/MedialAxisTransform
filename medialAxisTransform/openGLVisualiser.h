@@ -52,8 +52,8 @@
 #include <iostream>
 
 //uncomment required def to change visualiser
-//#define MARCHING_CUBES
-#define PLANE_PLOT
+#define MARCHING_CUBES
+//#define PLANE_PLOT
 //#define RAYCASTING
 
 

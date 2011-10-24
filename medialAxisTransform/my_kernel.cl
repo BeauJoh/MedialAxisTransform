@@ -33,7 +33,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
 #define FastFourierTransform
-//#define VolumetricRendering
+#define VolumetricRendering
 
 
 
@@ -1074,10 +1074,13 @@ void sobel3DCPU(__read_only image3d_t srcImg,
              int width, int height, int depth)
 {
     
-    //int x = (int)get_global_id(0);
-    //int y = (int)get_global_id(1);
-    //int z = (int)get_global_id(2);
+    int x = (int)get_global_id(0);
+    int y = (int)get_global_id(1);
+    int z = (int)get_global_id(2);
     
+    if(x%3 != 0 || y%3 != 0 || z%3 != 0){
+        return;
+    }
     //if its out of bounds why bother?
     //if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
     //    return;
@@ -1550,10 +1553,12 @@ void sobel3DCPU(__read_only image3d_t srcImg,
                 for(int x= startImageCoord.x; x <= endImageCoord.x; x++){
                     #ifdef VolumetricRendering
                     if(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x > 0.05f && WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y > 0.05f && WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z > 0.05f){
-                        write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
+                        //write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
+                        write_imagef(dstImg, (int4)(x,y,z,1),(float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1)); 
                     }
                     #else
-                    write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
+                    write_imagef(dstImg, (int4)(x,y,z,1),(float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1)); 
+                    //write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
                     #endif
                 }
             }

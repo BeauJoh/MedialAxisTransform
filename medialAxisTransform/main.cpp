@@ -327,7 +327,8 @@ int main(int argc, char *argv[])
     //cout << "max work item sizes" << CL_DEVICE_MAX_WORK_ITEM_SIZES << endl;
     //cout << "max workgroup size is : " << CL_DEVICE_MAX_WORK_GROUP_SIZE << endl;
     cout << "max kernel size is : " << CL_KERNEL_WORK_GROUP_SIZE << endl;
-    size_t localWorksize[3] = {3, 3, 3};
+    size_t localWorksize[3] = {0, 0, 0};
+    //size_t localWorksize[3] = {3, 3, 3};
     
     //cout << "Image Width " << getImageWidth() << endl;
     //cout << "Scaled Image Width " << RoundUp((int)localWorksize[0], getImageWidth()) << endl;
