@@ -355,23 +355,21 @@ __local static inline int DFTCPU(int dir,int m,float *x1,float *y1)
 
 
 /* --------------------------> Real work happens past this point <--------------------------------- */
-
-
 __kernel
 void sobel3D(__read_only image3d_t srcImg,
            __write_only image3d_t dstImg,
            sampler_t sampler,
            int width, int height, int depth)
 {
+
+    int x = (int)get_global_id(0);
+    int y = (int)get_global_id(1);
+    int z = (int)get_global_id(2);
     
-    //int x = (int)get_global_id(0);
-    //int y = (int)get_global_id(1);
-    //int z = (int)get_global_id(2);
-    
-    //if its out of bounds why bother?
-    //if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
-    //    return;
-    //}
+    //3*3*3 window do computation on
+    if(x%3 != 0 || y%3 != 0 || z%3 != 0){
+        return;
+    }
     
     //w is ignored? I believe w is included as all data types are a power of 2
     int4 startImageCoord = (int4) (get_global_id(0) - 1,
@@ -393,13 +391,6 @@ void sobel3D(__read_only image3d_t srcImg,
     if (outImageCoord.x < width && outImageCoord.y < height && outImageCoord.z < depth)
     {
         float4 thisIn = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
-        
-//        long thisDepth = endImageCoord.z - startImageCoord.z;
-//        long thisHeight = endImageCoord.y - startImageCoord.y;
-//        long thisWidth = endImageCoord.x - startImageCoord.x;
-        //printf((char const *)"%i", (int)thisDepth);
-        //int stackSize = thisDepth*thisWidth*thisHeight;
-
 
         float DaR[3][3][3];
         float DaI[3][3][3];
@@ -636,17 +627,6 @@ void sobel3D(__read_only image3d_t srcImg,
                 }
             }
         }
-
-        //check filter coefficients
-//      if(outImageCoord.x == 6 && outImageCoord.y == 6 && outImageCoord.z == 6){
-//            for (int i = 0; i < 3; i ++) {
-//                for (int j = 0; j < 3; j ++) {
-//                    for (int k = 0; k < 3; k++) {
-//                        printf((const char*)"at index[%i][%i][%i] -> %f\n",i,j,k, DkR[i][j][k]);
-//                    }
-//                }
-//            }
-//      }
         
         //Apply forward transform upon filter
         //First x-wise
@@ -1002,17 +982,6 @@ void sobel3D(__read_only image3d_t srcImg,
                 }
             }
         }
-
-            
-//      if(outImageCoord.x == 12 && outImageCoord.y == 222 && outImageCoord.z == 129){
-//            for (int i = 0; i < 3; i ++) {
-//                for (int j = 0; j < 3; j ++) {
-//                    for (int k = 0; k < 3; k++) {
-//                        printf((const char*)"at index[%i][%i][%i] -> %f\n",i,j,k, DatR[i][j][k]);
-//                    }
-//                }
-//            }
-//        }
             
         if(c == 0){
             for (int i = 0; i < 3; i ++) {
@@ -1055,10 +1024,12 @@ void sobel3D(__read_only image3d_t srcImg,
                 for(int x= startImageCoord.x; x <= endImageCoord.x; x++){
                     #ifdef VolumetricRendering
                     if(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x > 0.05f && WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y > 0.05f && WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z > 0.05f){
-                        write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
+                        write_imagef(dstImg, (int4)(x,y,z,1),(float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1)); 
+                        //write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
                     }
                     #else
-                    write_imagef(dstImg, outImageCoord, (float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1));
+                    //output over these output coordinates
+                    write_imagef(dstImg, (int4)(x,y,z,1),(float4)(WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].x,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].y,WriteDaR[z - startImageCoord.z][y - startImageCoord.y][x - startImageCoord.x].z,1)); 
                     #endif
                 }
             }
@@ -1564,63 +1535,6 @@ void sobel3DCPU(__read_only image3d_t srcImg,
             }
         }
     }
-}
-
-
-__kernel
-void sobel(__read_only image3d_t srcImg,
-           __write_only image3d_t dstImg,
-           sampler_t sampler,
-           int width, int height, int depth)
-{
-    
-    //*********************************************************************
-    //
-    // The operator uses two 3 x 3 kernels which are convolved with the
-    // original image to compute derivatives - one for horizontal changes &
-    // another for vertical.
-    //
-    // Gx the horizontal derivative is computed using the following 3 x 3 // kernel
-    //
-    //      [-1     0   +1]
-    // Gx = [-2     0   +2]
-    //      [-1     0   +1]
-    //
-    // Gy the vertical derivative is computed using the following 3 x 3
-    // kernel
-    //
-    //      [-1     -2  -1]
-    // Gy=  [0      0    0]
-    //      [+1     +2  +1]
-    //
-    // //*********************************************************************
-    
-    int x = (int)get_global_id(0);
-    int y = (int)get_global_id(1);
-    int z = (int)get_global_id(2);
-    
-    if (x >= get_image_width(srcImg) || y >= get_image_height(srcImg) || z >= get_image_depth(srcImg)){
-        return;
-    }
-    
-    float4 p00 = read_imagef(srcImg, sampler, (int4)(x - 1, y - 1,  z, 1)); 
-    float4 p10 = read_imagef(srcImg, sampler, (int4)(x,     y - 1,  z, 1)); 
-    float4 p20 = read_imagef(srcImg, sampler, (int4)(x + 1, y - 1,  z, 1));
-    
-    float4 p01 = read_imagef(srcImg, sampler, (int4)(x - 1, y,  z,  1));
-    float4 p21 = read_imagef(srcImg, sampler, (int4)(x + 1, y,  z,  1));
-    
-    float4 p02 = read_imagef(srcImg, sampler, (int4)(x - 1, y + 1,  z,  1)); 
-    float4 p12 = read_imagef(srcImg, sampler, (int4)(x,     y + 1,  z,  1)); 
-    float4 p22 = read_imagef(srcImg, sampler, (int4)(x + 1, y + 1,  z,  1));
-    
-    float3 gx = -p00.xyz + p20.xyz + 2.0f * (p21.xyz - p01.xyz) -p02.xyz + p22.xyz;
-    float3 gy = -p00.xyz - p20.xyz + 2.0f * (p12.xyz - p10.xyz) +p02.xyz + p22.xyz;
-    
-    float3  g = native_sqrt(gx * gx + gy * gy);
-    
-    // we could also approximate this as g = fabs(gx) + fabs(gy)
-    write_imagef(dstImg, (int4)(x, y, z, 1), (float4)(g.x, g.y, g.z, 1.0f));
 }
 
 __kernel 
